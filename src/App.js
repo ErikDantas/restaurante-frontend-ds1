@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import { Component } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+import Cardapio from './Components/Cardapio/Cardapio';
+import Carrinho from './Components/Carrinho/Carrinho';
+import Cliente from './Components/Cliente/ClienteLoginCadastro';
+import Footer from './Components/Layout/Footer';
+import Home from './Components/Layout/Home';
+import Menu from './Components/Layout/Menu';
+import Reserva from './Components/Reserva/Reserva';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component{
+  render(){
+    return (
+      <BrowserRouter>
+        <div className="container">
+        <Menu/>
+          <Switch>
+            <Route exact path="/">
+              <Home/>
+            </Route>
+            <Route path="/Cardapio">
+              <Cardapio/>
+            </Route>
+            <Route path="/ClienteLoginCadastro">
+              <Cliente/>
+            </Route>
+            <Route path="/Reservas">
+              <Reserva/>
+            </Route>
+            <Route path="/Carrinho">
+              <Carrinho/>
+            </Route>
+          </Switch>
+          <Footer/>
+        </div>
+      </BrowserRouter>
+    );
+  }
 }
-
-export default App;
