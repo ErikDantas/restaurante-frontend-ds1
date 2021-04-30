@@ -17,7 +17,8 @@ export default class ClienteLoginCadastro extends Component{
         email: "",
         senha: "",
         senha2: "",
-        telefone: ""
+        telefone: "",
+        clienteLogin: ""
     }
     
     funcNomeChange = (event) => {
@@ -40,11 +41,11 @@ export default class ClienteLoginCadastro extends Component{
     }
 
     efetuarLogin = () => {
-        const flogin = {
-            "login":this.state.email,
+        var flogin = {
+            "email":this.state.email,
             "senha":this.state.senha
         }
-        const requestOptions = {
+        var requestOptions = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,17 +53,32 @@ export default class ClienteLoginCadastro extends Component{
             body: JSON.stringify(flogin)
         }
 
-        const url = window.servidor + '/funcionario/login'
+        var url = window.servidor + '/cliente/login'
         fetch(url,requestOptions)
-            .then(response => {
-                console.log(response.status)
+            .then(response => response.json())
+            .then(data => this.setState({clienteLogin: data}) )
+            .then(() => {
+                let nomeUsuario = this.state.clienteLogin.nome;
+                console.log(this.state.clienteLogin)
+                if(this.state.clienteLogin.nome==='null'){
+                    localStorage.setItem('NomeLogin','null')
+                }else{
+                    localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                    toast.success('Benvindo '+ nomeUsuario)
 
+                }
+                
+                window.location.reload()
             })
-
             
+ 
             
 
     }
+
+
+
+
 
     gravarCliente = () => {
         if(this.state.senha === this.state.senha2){
@@ -116,12 +132,12 @@ export default class ClienteLoginCadastro extends Component{
                                     <form>
                                         <div className="form-group mb-3">
                                             <label>Email</label>
-                                            <input type="email" className="form-control" id="InputEmail1" aria-describedby="emailHelplogin" placeholder="Enter email"/>
+                                            <input type="email" value={this.state.email} onChange={this.funcEmailChange} className="form-control" id="InputEmail1" aria-describedby="emailHelplogin" placeholder="Enter email"/>
                                             <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                                         </div>
                                         <div className="form-group">
                                             <label>Password</label>
-                                            <input type="password" className="form-control" id="exampleInputPasswordLogin" placeholder="Password"/>
+                                            <input type="password" value={this.state.senha} onChange={this.funcSenhaChange} className="form-control" id="exampleInputPasswordLogin" placeholder="Password"/>
                                         </div>
                                         <div className="p-3">
                                             <Link to="/PasswordForget">
