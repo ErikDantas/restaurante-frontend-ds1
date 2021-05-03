@@ -13,6 +13,7 @@ export default class Menu extends Component{
                         <Link className="navbar-brand text-white p-1" to="/carrinho"><i className="bi bi-cart"></i> 
                             Carrinho (Delivery)                            
                         </Link>
+                        <Link className="navbar-brand text-white p-1" to="/GerenteCadastroItem">Cadastrar Item</Link>
                     </div>
 
 
