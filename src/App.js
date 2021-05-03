@@ -3,11 +3,12 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Cardapio from './Components/Cardapio/Cardapio';
 import Carrinho from './Components/Carrinho/Carrinho';
-import Cliente from './Components/Cliente/ClienteLoginCadastro';
+import Cliente from './Components/Layout/LoginCadastro';
 import Footer from './Components/Layout/Footer';
 import Home from './Components/Layout/Home';
 import Menu from './Components/Layout/Menu';
 import Reserva from './Components/Reserva/Reserva';
+import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
 
 export default class App extends Component{
   render(){
@@ -30,6 +31,9 @@ export default class App extends Component{
             </Route>
             <Route path="/Carrinho">
               <Carrinho/>
+            </Route>
+            <Route path="/funcionarios/GerenciarCardapio">
+              <GerenciarCardapio/>
             </Route>
           </Switch>
           <Footer/>

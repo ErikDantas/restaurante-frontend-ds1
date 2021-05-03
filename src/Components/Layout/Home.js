@@ -6,7 +6,7 @@ export default class Home extends Component{
         return(
             <div className="mt-5 p-3">
                 <div className="row">
-                    <div className="col-12 text-center">
+                    <div className="col-12 text-center mt-3">
                         <img src="https://media.gazetadopovo.com.br/bomgourmet/2019/07/comida-caipira-768x307-a5c1ed80.jpg" className="img-fluid" alt="..."/>
                     </div>
                 </div>
