@@ -10,6 +10,7 @@ export default class Menu extends Component{
                         <Link className="navbar-brand text-white p-1" to="/"><i className="bi bi-house"> Página Inicial</i></Link>
                         <Link className="navbar-brand text-white p-1" to="/cardapio">Cardápio</Link>
                         <Link className="navbar-brand text-white p-1" to="/reservas">Reservas</Link>
+                        <Link className="navbar-brand text-white p-1" to="/mesa">Mesa</Link>
                         <Link className="navbar-brand text-white p-1" to="/carrinho"><i className="bi bi-cart"></i> 
                             Carrinho (Delivery)                            
                         </Link>

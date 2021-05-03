@@ -8,6 +8,7 @@ import Footer from './Components/Layout/Footer';
 import Home from './Components/Layout/Home';
 import Menu from './Components/Layout/Menu';
 import Reserva from './Components/Reserva/Reserva';
+import Mesa from './Components/Mesa/Mesa';
 
 export default class App extends Component{
   render(){
@@ -30,6 +31,9 @@ export default class App extends Component{
             </Route>
             <Route path="/Carrinho">
               <Carrinho/>
+            </Route>
+            <Route path="/Mesa">
+              <Mesa/>
             </Route>
           </Switch>
           <Footer/>
