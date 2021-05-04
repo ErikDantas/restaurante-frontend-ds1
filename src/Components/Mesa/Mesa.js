@@ -2,26 +2,25 @@ import React, { Component } from 'react'
 
 export default class Mesa extends Component {
     state = {
-        qtdCadeira: "",
-        status: ""
+        qtdCadeiras: "",
+        reservada: ""
     }
         txtNome_change = (event)=> {
 
             console.log(event.target.value)
-            this.setState({qtdCadeira: event.target.value})
+            this.setState({qtdCadeiras: event.target.value})
 
         }
 
-
         chkmesa = (event) =>{
 
-            this.setState({status: event.target.checked})
+            this.setState({reservada: event.target.checked})
         }
         
         gravarNovo = () => {
             const dados = {
-                "qtdCadeira": this.state.qtdCadeira,
-                "status": this.state.status
+                "qtdCadeiras": this.state.qtdCadeiras,
+                "reservada": this.state.reservada
                 
             }
                 console.log(dados)
@@ -35,7 +34,7 @@ export default class Mesa extends Component {
                     
             };
             
-            const url = "http://localhost:8080/mesa/"
+            const url = window.servidor + '/mesa/incluir'
             fetch(url, requestOptions)
             .then(console.log('Gravado'))
             .catch(erro=>console.log('erro'));
@@ -52,7 +51,7 @@ export default class Mesa extends Component {
                     </div>
                     <div className="row mt-2">
                         <div className="col-2">
-                        <input value={this.state.qtdCadeira} onChange={this.txtNome_change} className="form-control name-pull-image" type="text"></input>     
+                        <input value={this.state.qtdCadeiras} onChange={this.txtNome_change} className="form-control name-pull-image" type="text"></input>     
                         </div>       
                     </div>
                     
