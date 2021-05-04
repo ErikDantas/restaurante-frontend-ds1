@@ -1,29 +1,31 @@
 import { Component } from "react";
 
 
-export default class GerenciarCardapio extends Component{
+export default class GerenciarFuncionarios extends Component{
 
     state = {
-        id: "",
+        matricula: "",
         nome: "",
-        valor: "",
-        tipoItem: "",
-        tempoPreparo: "",
-        qtdRefeicao: "",
-        itens: []
+        cargo: "",
+        login: "",
+        senha: "",
+        gerente: "",
+        cpf: "",
+        email: "",
+        logradouro: "",
+        numero: "",
+        complemento: "",
+        cidade: "",
+        uf: "",
+        cep: "",
+        bairro: "",
+        valorFrete: ""
+
     }
 
-    preencherTabelaItens = () => {
-        const url = window.servidor + '/item/'
-        fetch(url)
-            .then(response => response.json())
-            .then(data => this.setState({itens: data}));
-    }
 
 
-    componentDidMount(){
-        this.preencherTabelaItens()
-    }
+
 
 
     render(){

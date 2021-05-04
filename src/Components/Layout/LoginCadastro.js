@@ -20,7 +20,6 @@ export default class ClienteLoginCadastro extends Component{
         telefone: "",
         clienteLogin: "",
         TipoLogin: ""
-      
     }
     
 
@@ -81,7 +80,6 @@ export default class ClienteLoginCadastro extends Component{
                 .then(data => this.setState({clienteLogin: data}) )
                 .then(() => {
                     let nomeUsuario = this.state.clienteLogin.nome;
-                    console.log(this.state.clienteLogin)
                     if(this.state.clienteLogin.nome==='null'){
                         localStorage.setItem('NomeLogin','null')
                     }else{
@@ -91,7 +89,6 @@ export default class ClienteLoginCadastro extends Component{
 
 
                     }
-                    console.log(this.state.TipoLogin)
                     window.location.reload()
                 })
         }else{
@@ -101,7 +98,6 @@ export default class ClienteLoginCadastro extends Component{
                 .then(data => this.setState({clienteLogin: data}) )
                 .then(() => {
                     let nomeUsuario = this.state.clienteLogin.nome;
-                    console.log(this.state.clienteLogin)
                     if(this.state.clienteLogin.nome==='null'){
                         localStorage.setItem('NomeLogin','null')
                     }else{
@@ -111,7 +107,6 @@ export default class ClienteLoginCadastro extends Component{
                         toast.success('Benvindo '+ nomeUsuario)
 
                     }
-                    console.log(this.state.TipoLogin)
                     
                     window.location.reload()
                 })

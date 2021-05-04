@@ -9,6 +9,7 @@ import Home from './Components/Layout/Home';
 import Menu from './Components/Layout/Menu';
 import Reserva from './Components/Reserva/Reserva';
 import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
+import GerenciarFuncionarios from './Components/Funcionario/GerenciarFuncionarios';
 
 export default class App extends Component{
   render(){
@@ -34,6 +35,9 @@ export default class App extends Component{
             </Route>
             <Route path="/funcionarios/GerenciarCardapio">
               <GerenciarCardapio/>
+            </Route>
+            <Route path="/funcionarios/GerenciarFuncionarios">
+              <GerenciarFuncionarios/>
             </Route>
           </Switch>
           <Footer/>
