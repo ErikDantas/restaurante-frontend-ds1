@@ -16,12 +16,12 @@ export default class Menu extends Component{
                 <nav className="col-12 navbar bg-dark text-white navbar-light">
                     <div>
                         <Link className="navbar-brand text-white fontetexto p-1" to="/"><i className="bi bi-house"> Página Inicial</i></Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/cardapio">Cardápio</Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/reservas">Reservas</Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/carrinho"><i className="bi bi-cart"></i>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/Cardapio">Cardápio</Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/Reservas">Reservas</Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/Carrinho"><i className="bi bi-cart"></i>
                             Carrinho (Delivery)                            
                         </Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/GerenteCadastroItem">Cadastrar Item</Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/AdicionarItem">Cadastrar Item</Link>
                     </div>
 
                     <Link className="navbar-brand text-white p-1  " to="/ClienteLoginCadastro">Entrar</Link>
@@ -38,12 +38,12 @@ export default class Menu extends Component{
                 <nav className="col-12 navbar bg-dark text-white navbar-light">
                     <div>
                         <Link className="navbar-brand text-white fontetexto p-1" to="/"><i className="bi bi-house"> Página Inicial</i></Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/cardapio">Cardápio</Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/reservas">Reservas</Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/carrinho"><i className="bi bi-cart"></i> 
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/Cardapio">Cardápio</Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/Reservas">Reservas</Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/Carrinho"><i className="bi bi-cart"></i> 
                             Carrinho (Delivery)                            
                         </Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/GerenteCadastroItem">Cadastrar Item</Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/AdicionarItem">Cadastrar Item</Link>
                     </div>
 
                     <div className="btn-group dropstart p-1">
