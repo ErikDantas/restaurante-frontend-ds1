@@ -7,8 +7,10 @@ import Cliente from './Components/Layout/LoginCadastro';
 import Footer from './Components/Layout/Footer';
 import Home from './Components/Layout/Home';
 import Menu from './Components/Layout/Menu';
+import Mesa from './Components/Mesa/Mesa';
 import Reserva from './Components/Reserva/Reserva';
 import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
+import GerenteCadastroItem from './Components/Gerente/GerenteCadastroItem';
 
 export default class App extends Component{
   render(){
@@ -32,8 +34,14 @@ export default class App extends Component{
             <Route path="/Carrinho">
               <Carrinho/>
             </Route>
-            <Route path="/funcionarios/GerenciarCardapio">
+            <Route path="/Mesa">
+              <Mesa/>
+            </Route>
+            <Route path="/GerenciarCardapio">
               <GerenciarCardapio/>
+            </Route>
+            <Route path="/GerenteCadastroItem">
+              <GerenteCadastroItem/>
             </Route>
           </Switch>
           <Footer/>

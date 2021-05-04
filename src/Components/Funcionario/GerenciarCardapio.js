@@ -30,7 +30,7 @@ export default class GerenciarCardapio extends Component{
         return(
             <div className="row mt-5 mb-5 ">
                 <div>
-                    <h2 className="p-3 text-center mt-4">Gerênciar Cardápio</h2>
+                    <h2 className="p-3 text-center mt-4">Gerenciar Cardápio</h2>
                 </div>
                 <div>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" className="btn btn-primary"><i className="bi bi-plus-circle"></i> Adicionar Item</button>

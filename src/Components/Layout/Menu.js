@@ -18,9 +18,10 @@ export default class Menu extends Component{
                         <Link className="navbar-brand text-white fontetexto p-1" to="/"><i className="bi bi-house"> Página Inicial</i></Link>
                         <Link className="navbar-brand text-white fontetexto p-1" to="/cardapio">Cardápio</Link>
                         <Link className="navbar-brand text-white fontetexto p-1" to="/reservas">Reservas</Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/carrinho"><i className="bi bi-cart"></i> 
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/carrinho"><i className="bi bi-cart"></i>
                             Carrinho (Delivery)                            
                         </Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/GerenteCadastroItem">Cadastrar Item</Link>
                     </div>
 
                     <Link className="navbar-brand text-white p-1  " to="/ClienteLoginCadastro">Entrar</Link>
@@ -42,6 +43,7 @@ export default class Menu extends Component{
                         <Link className="navbar-brand text-white fontetexto p-1" to="/carrinho"><i className="bi bi-cart"></i> 
                             Carrinho (Delivery)                            
                         </Link>
+                        <Link className="navbar-brand text-white fontetexto p-1" to="/GerenteCadastroItem">Cadastrar Item</Link>
                     </div>
 
                     <div className="btn-group dropstart p-1">
@@ -51,7 +53,8 @@ export default class Menu extends Component{
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a className="dropdown-item" href="/">Gerenciar Funcionarios</a></li>
                             <li><a className="dropdown-item" href="/">Gerenciar Clientes</a></li>
-                            <li><a className="dropdown-item" href="/funcionarios/GerenciarCardapio">Gerenciar Cardápio</a></li>
+                            <li><a className="dropdown-item" href="/gerenciarcardapio">Gerenciar Cardápio</a></li>
+                            <li><a className="dropdown-item" href="/mesa">Gerenciar Mesas</a></li>
                             <li><hr className="dropdown-divider"/></li>
                             <li><a className="dropdown-item" onClick={this.funcLogoff} href="/ClienteLoginCadastro">Logout</a></li>
                         </ul>
