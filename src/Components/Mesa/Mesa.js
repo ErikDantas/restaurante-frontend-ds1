@@ -6,7 +6,16 @@ export default class Mesa extends Component {
         status: ""
     }
         txtNome_change = (event)=> {
+
+            console.log(event.target.value)
             this.setState({qtdCadeira: event.target.value})
+
+        }
+
+
+        chkmesa = (event) =>{
+
+            this.setState({status: event.target.checked})
         }
         
         gravarNovo = () => {
@@ -15,7 +24,8 @@ export default class Mesa extends Component {
                 "status": this.state.status
                 
             }
-
+                console.log(dados)
+                
             const requestOptions = {
                 method:'POST',
                 headers:{
@@ -46,15 +56,15 @@ export default class Mesa extends Component {
                         </div>       
                     </div>
                     
-                    <div class="from-check">
+                    <div className="form-check">
                         Mesa reservada:  
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input className="form-check-input" onChange={this.chkmesa} type="checkbox" value="1" id="flexCheckDefault"></input>
+                        <label className="form-check-label">
                         </label>
                         </div>
                         <div className="row mt-2">
                             <div className="col-1">
-                                <button className="btn btn-primary"OnClick = {() => this.gravarNovo()}>Gravar</button>
+                                <button className="btn btn-primary" onClick = {() => this.gravarNovo()}>Gravar</button>
                             </div>
                         <div className="col-1">
                             <button className="btn btn-primary" >Voltar</button>
