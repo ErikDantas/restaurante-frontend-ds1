@@ -10,11 +10,8 @@ import Menu from './Components/Layout/Menu';
 import Mesa from './Components/Mesa/Mesa';
 import Reserva from './Components/Reserva/Reserva';
 import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
-<<<<<<< HEAD
 import GerenciarFuncionarios from './Components/Funcionario/GerenciarFuncionarios';
-=======
 import AdicionarItem from './Components/Funcionario/AdicionarItem';
->>>>>>> origin/alunos
 
 export default class App extends Component{
   render(){
@@ -22,7 +19,7 @@ export default class App extends Component{
       <BrowserRouter>
         <div className="container">
         <Menu/>
-          <Switch>
+        <Switch>
             <Route exact path="/">
               <Home/>
             </Route>
@@ -44,15 +41,13 @@ export default class App extends Component{
             <Route path="/GerenciarCardapio">
               <GerenciarCardapio/>
             </Route>
-<<<<<<< HEAD
             <Route path="/funcionarios/GerenciarFuncionarios">
               <GerenciarFuncionarios/>
-=======
+            </Route>
             <Route path="/AdicionarItem">
               <AdicionarItem/>
->>>>>>> origin/alunos
             </Route>
-          </Switch>
+            </Switch>
           <Footer/>
         </div>
       </BrowserRouter>

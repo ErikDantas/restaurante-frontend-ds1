@@ -9,9 +9,10 @@ export default class GerenciarCardapio extends Component{
         id: "",
         nome: "",
         valor: "",
-        tipoItem: "",
+        tipoItem: "0",
         tempoPreparo: "",
         qtdRefeicao: "",
+        alterando: false,
         itens: []
     }
 
@@ -22,6 +23,22 @@ export default class GerenciarCardapio extends Component{
             .then(data => this.setState({itens: data}));
     }
 
+    funcApagaItem = (item) => {
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const url = window.servidor + '/item/' + item.id
+        console.info(url)
+        fetch(url, requestOptions)
+            .then(this.preencherTabelaItens())
+            .catch(erro => console.log(erro));
+    }
 
     componentDidMount(){
         this.preencherTabelaItens()
@@ -84,7 +101,7 @@ export default class GerenciarCardapio extends Component{
                     <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" className="btn btn-primary"><i className="bi bi-plus-circle"></i> Adicionar Item</button>
                     {/* MODAL PARA INSERIR UM NOVO ITEM */}
                     <div>
-                        <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                 <div className="modal-header">
@@ -106,18 +123,15 @@ export default class GerenciarCardapio extends Component{
                                                     <label className="col-form-label">Tipo Item</label>
                                                 </div>
                                                 <div className="input-group mb-3">
-                                                    <div className="input-group-prepend">
-                                                        <label className="input-group-text" for="inputGroupSelect01">{this.state.tipoItem}</label>
-                                                    </div>
-                                                    <select value={this.state.tipoItem} onChange={this.funcTipoItemChange} className="form-control" id="inputGroupSelect01">
-                                                        <option selected value="0">Entrada</option>
-                                                        <option value="1">Prato principal</option>
+                                                    
+                                                    <select value={this.state.tipoItem} onChange={this.funcTipoItemChange} selected="0" className="form-control" id="inputGroupSelect01">
+                                                        <option value="0">Entrada</option>
+                                                        <option value="1">Prato Principal</option>
                                                         <option value="2">Sobremesa</option>
                                                         <option value="3">Bebida não alcoólica</option>
                                                         <option value="4">Bebida alcoólica</option>
                                                     </select>
                                                 </div>
-
                                                 <div className="mb-3">
                                                     <label className="col-form-label">Quantidade de Refeições</label>
                                                     <input value={this.state.qtdRefeicao} onChange={this.funcQtdRefeicaoChange} className="form-control" type="number" id="number-input"/>
@@ -125,9 +139,9 @@ export default class GerenciarCardapio extends Component{
                                                 <div>
                                                     <label className="col-form-label">Valor</label>
                                                 </div>
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="inputGroup-sizing-default">R$</span>
+                                                <div className="input-group mb-3">
+                                                    <div className="input-group-prepend">
+                                                        <span className="input-group-text" id="inputGroup-sizing-default">R$</span>
                                                     </div>
                                                     <input value={this.state.valor} onChange={this.funcValorChange} className="form-control" type="number" step="0.05" id="number-input"/>
                                                 </div>
@@ -135,25 +149,19 @@ export default class GerenciarCardapio extends Component{
                                                 <div>
                                                     <label className="col-form-label">Tempo de Preparo</label>
                                                 </div>
-                                                <div class="input-group mb-3">
+                                                <div className="input-group mb-3">
                                                     <input value={this.state.tempoPreparo} onChange={this.funcTempoPreparoChange} className="form-control" type="number" id="number-input"/>
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="inputGroup-sizing-default">minutos</span>
+                                                    <div className="input-group-append">
+                                                        <span className="input-group-text" id="inputGroup-sizing-default">minutos</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-<<<<<<< HEAD
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" className="btn btn-primary">Save changes</button>
-=======
-                                <div class="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={ () => this.preencherTabelaItens() } data-bs-dismiss="modal">Fechar</button>
+                                    <button type="button" className="btn btn-secondary" onClick={ () => this.preencherTabelaItens(this.state.id) } data-bs-dismiss="modal">Fechar</button>
                                     <button type="button" className="btn btn-primary" onClick={ () => this.gravarItem() }>Salvar</button>
->>>>>>> origin/alunos
                                 </div>
                                 </div>
                             </div>
@@ -189,7 +197,7 @@ export default class GerenciarCardapio extends Component{
                                                     <button className="btn btn-sm btn-info"><i className="bi bi-pencil-square"></i> Editar</button>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button className="btn btn-sm btn-warning"><i className="bi bi-trash"></i> Deletar</button>
+                                                    <button className="btn btn-sm btn-warning" onClick={ () => this.funcApagaItem(item)} ><i className="bi bi-trash"></i> Deletar</button>
                                                 </div>
                                             </div>
                                         </td>
