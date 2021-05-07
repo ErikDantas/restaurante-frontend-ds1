@@ -18,7 +18,7 @@ export default class App extends Component{
       <BrowserRouter>
         <div className="container">
         <Menu/>
-          <Switch>
+        <Switch>
             <Route exact path="/">
               <Home/>
             </Route>
@@ -43,7 +43,7 @@ export default class App extends Component{
             <Route path="/funcionarios/GerenciarFuncionarios">
               <GerenciarFuncionarios/>
             </Route>
-          </Switch>
+            </Switch>
           <Footer/>
         </div>
       </BrowserRouter>
