@@ -145,15 +145,9 @@ export default class GerenciarCardapio extends Component{
                                         </div>
                                     </form>
                                 </div>
-<<<<<<< HEAD
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="button" className="btn btn-primary">Save changes</button>
-=======
-                                <div class="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={ () => this.preencherTabelaItens() } data-bs-dismiss="modal">Fechar</button>
-                                    <button type="button" className="btn btn-primary" onClick={ () => this.gravarItem() }>Salvar</button>
->>>>>>> origin/alunos
                                 </div>
                                 </div>
                             </div>

@@ -5,10 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 //import {cpf} from 'cpf-cnpj-validator';
 
 
+
 toast.configure()
 export default class ClienteLoginCadastro extends Component{
-
-    
 
     state = {
         id: "",
@@ -92,6 +91,8 @@ export default class ClienteLoginCadastro extends Component{
                     window.location.reload()
                 })
         }else{
+            
+
             var purl = window.servidor + '/cliente/login'
             fetch(purl,requestOptions)
                 .then(response => response.json())
