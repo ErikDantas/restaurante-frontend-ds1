@@ -53,7 +53,11 @@ export default class GerenciarFuncionarios extends Component{
         const url = window.servidor + '/funcionario/'
         fetch(url)
             .then(response => response.json())
-            .then(data => this.setState({funcionarios: data}))
+            .then((data) => {
+                this.setState({funcionarios: data}
+            
+                    )})
+            
     }
 
     componentDidMount(){
@@ -82,13 +86,18 @@ export default class GerenciarFuncionarios extends Component{
 
         const url = window.servidor + "/funcionario/incluir"
 
-        fetch(url, requestOptions)
+        if(novofuncionario.cpf.length!==0 && novofuncionario.senha.length!==0 && novofuncionario.login.length!==0 && novofuncionario.cargo.length!==0){
+            fetch(url, requestOptions)
             .then((dados) => {
                 if(dados.status===200){
                     this.preencherTabelaFuncionarios()
                     toast.success("Adicionado com sucesso.")
                 }
             })
+        }else{
+            toast.error("Preencha todos os campos.")
+        }
+        
     }
 
     deletarFuncionario = (x) => {
@@ -140,15 +149,16 @@ export default class GerenciarFuncionarios extends Component{
                                         </div>
                                         <div className="col-5 mt-2">
                                             <label className="form-label">Senha</label>
-                                            <input required value={this.state.senha} onChange={this.funcSenhaChange} maxLength='20' type="password" className="form-control" ></input>
+                                            <input required minLength="4" value={this.state.senha} onChange={this.funcSenhaChange} maxLength='20' type="password" className="form-control" ></input>
+                                            <small id="emailHelp" className="form-text text-muted">Mínimo de 4 digitos</small>
                                         </div>
-                                        <div className="col-3 mt-2">
+                                        <div className="col-4 mt-2">
                                             <label className="form-label">CPF</label>
-                                            <input value={this.state.cpf} onChange={this.funcCpfChange} maxLength='11' type="text" className="form-control" ></input>
+                                            <input minLength="11" maxLength="11" value={this.state.cpf} onChange={this.funcCpfChange} type="text" className="form-control" />
                                         </div>
                                         <div className="col-8 mt-2">
                                             <label className="form-label">Email</label>
-                                            <input maxLength='40' type="text" className="form-control" ></input>
+                                            <input maxLength='40' value={this.state.email} onChange={this.funcEmailChange} type="text" className="form-control" ></input>
                                         </div>
                                         <div className="form-check col-5 mt-2">
                                             <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -161,7 +171,7 @@ export default class GerenciarFuncionarios extends Component{
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="button" onClick={() => this.gravarNovoFuncionario()} className="btn btn-primary">Salvar</button>
+                                    <button type="button" onClick={() => this.gravarNovoFuncionario()} className="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
                                 </div>
                                 </div>
                             </div>

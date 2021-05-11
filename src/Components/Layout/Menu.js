@@ -39,9 +39,7 @@ export default class Menu extends Component{
                         <Link className="navbar-brand text-white fontetexto p-1" to="/"><i className="bi bi-house"> Página Inicial</i></Link>
                         <Link className="navbar-brand text-white fontetexto p-1" to="/Cardapio">Cardápio</Link>
                         <Link className="navbar-brand text-white fontetexto p-1" to="/Reservas">Reservas</Link>
-                        <Link className="navbar-brand text-white fontetexto p-1" to="/Carrinho"><i className="bi bi-cart"></i> 
-                            Carrinho (Delivery)                            
-                        </Link>
+                        
                         <Link className="navbar-brand text-white fontetexto p-1" to="/AdicionarItem">Cadastrar Item</Link>
                     </div>
 
@@ -49,6 +47,9 @@ export default class Menu extends Component{
                         <button className="btn btn-dark dropdown-toggle fontetexto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             {localStorage.getItem('NomeLogin')}
                         </button>
+                        <Link className="navbar-brand text-white p-1" to="/Carrinho"><i className="bi bi-cart"></i><span className="badge bg-primary p-1">{sessionStorage.getItem('qtdecarrinho')}</span>
+                        <span className="visually-hidden">unread messages</span> </Link>
+
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a className="dropdown-item" href="/funcionarios/GerenciarFuncionarios">Gerenciar Funcionarios</a></li>
                             <li><a className="dropdown-item" href="/">Gerenciar Clientes</a></li>
