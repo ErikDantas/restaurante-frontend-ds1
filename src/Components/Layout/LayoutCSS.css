@@ -6,3 +6,8 @@
 .fontetexto{
     font-size: 12pt;
 }
+
+
+.bg-primary{
+    background-color: rgb(64, 73, 109);
+}

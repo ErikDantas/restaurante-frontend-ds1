@@ -10,19 +10,40 @@ export default class Cardapio extends Component{
         tipoItem: "",
         tempoPreparo: "",
         qtdRefeicao: "",
-        itens: []
+        itens: [],
+        qtdecarrinho: ""
     }
 
     preencherTabelaItens = () => {
         const url = window.servidor + '/item/'
         fetch(url)
             .then(response => response.json())
-            .then(data => this.setState({itens: data}));
+            .then(data => this.setState({itens: data}))
+            .then(()=>{
+                console.log(this.state.itens)
+            })
     }
 
 
+    adicionarAoCarrinho = (e) => {
+
+        const url = window.servidor + '/item/carrinho/add/'+e.id
+
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({qtdecarrinho: data})
+                sessionStorage.setItem('qtdecarrinho',this.state.qtdecarrinho)
+                console.log(this.state.qtdecarrinho)
+                window.location.reload()
+            })
+
+
+    }
+
     componentDidMount(){
         this.preencherTabelaItens()
+        
     }
 
 
@@ -55,7 +76,7 @@ export default class Cardapio extends Component{
                                     <td>{item.tempoPreparo}</td>
                                     <td>{item.qtdRefeicao}</td>
                                     <td className="text-center">
-                                            <button className="btn btn-sm btn-info"><i className="bi bi-cart-plus"></i> Add</button>
+                                            <button onClick={() => this.adicionarAoCarrinho(item)} className="btn btn-sm btn-info"><i className="bi bi-cart-plus"></i> Add</button>
                                     </td>
                                 </tr>
                             })}

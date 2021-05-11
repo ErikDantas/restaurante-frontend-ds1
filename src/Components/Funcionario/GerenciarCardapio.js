@@ -13,7 +13,8 @@ export default class GerenciarCardapio extends Component{
         tempoPreparo: "",
         qtdRefeicao: "",
         alterando: false,
-        itens: []
+        itens: [],
+        tipositens: []
     }
 
     preencherTabelaItens = () => {
@@ -42,6 +43,7 @@ export default class GerenciarCardapio extends Component{
 
     componentDidMount(){
         this.preencherTabelaItens()
+        this.getTipoItem()
     }
 
     funcNomeChange = (event) => {
@@ -59,6 +61,15 @@ export default class GerenciarCardapio extends Component{
     funcTempoPreparoChange = (event) => {
         this.setState({tempoPreparo: event.target.value})
     }
+
+    getTipoItem = () => {
+        const url = window.servidor + '/item/tipoitem'
+        fetch(url)
+            .then(response => response.json())
+            .then(data => this.setState({tipositens: data}));
+    }
+
+
     
     gravarItem = () => {
         const dados = {
@@ -125,11 +136,11 @@ export default class GerenciarCardapio extends Component{
                                                 <div className="input-group mb-3">
                                                     
                                                     <select value={this.state.tipoItem} onChange={this.funcTipoItemChange} selected="0" className="form-control" id="inputGroupSelect01">
-                                                        <option value="0">Entrada</option>
-                                                        <option value="1">Prato Principal</option>
-                                                        <option value="2">Sobremesa</option>
-                                                        <option value="3">Bebida não alcoólica</option>
-                                                        <option value="4">Bebida alcoólica</option>
+                                                    {this.state.tipositens && this.state.tipositens.map( item => {
+                                                        return <option>{item}</option>
+                                                        
+                                                        })}
+
                                                     </select>
                                                 </div>
                                                 <div className="mb-3">
@@ -160,8 +171,8 @@ export default class GerenciarCardapio extends Component{
                                     </form>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={ () => this.preencherTabelaItens(this.state.id) } data-bs-dismiss="modal">Fechar</button>
-                                    <button type="button" className="btn btn-primary" onClick={ () => this.gravarItem() }>Salvar</button>
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" className="btn btn-primary">Save changes</button>
                                 </div>
                                 </div>
                             </div>

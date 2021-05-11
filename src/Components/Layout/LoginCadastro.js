@@ -5,10 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 //import {cpf} from 'cpf-cnpj-validator';
 
 
+
 toast.configure()
 export default class ClienteLoginCadastro extends Component{
-
-    
 
     state = {
         id: "",
@@ -21,7 +20,7 @@ export default class ClienteLoginCadastro extends Component{
         clienteLogin: "",
         TipoLogin: ""
     }
-    
+
 
     funcSetTipoLogin = e => {
         this.setState({TipoLogin: e.target.value})
@@ -92,6 +91,8 @@ export default class ClienteLoginCadastro extends Component{
                     window.location.reload()
                 })
         }else{
+            
+
             var purl = window.servidor + '/cliente/login'
             fetch(purl,requestOptions)
                 .then(response => response.json())
@@ -146,11 +147,11 @@ export default class ClienteLoginCadastro extends Component{
             
             
         }else{
+            console.log(this.state.mascara)
             toast.error('As senhas inseridas não conferem. ');
         }
         
     }
-
 
 
     render(){
@@ -168,9 +169,9 @@ export default class ClienteLoginCadastro extends Component{
                                 <div className="accordion-body mt-3">
                                     <form>
                                         <div className="form-group mb-3">
-                                            <label>Email</label>
-                                            <input type="email" required value={this.state.email} onChange={this.funcEmailChange} className="form-control" id="InputEmail1" aria-describedby="emailHelplogin" placeholder="Enter email"/>
-                                            <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            <label>Email / Login</label>
+                                            <input type="email" required value={this.state.email} onChange={this.funcEmailChange} className="form-control" id="InputEmail1" aria-describedby="emailHelplogin" placeholder="Insira o email ou login"/>
+                                            <small id="emailHelp" className="form-text text-muted">Nome de usuário ou e-mail.</small>
                                         </div>
                                         <div className="form-group">
                                             <label>Password</label>
