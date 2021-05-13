@@ -11,8 +11,12 @@ import Mesa from './Components/Mesa/Mesa';
 import Reserva from './Components/Reserva/Reserva';
 import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
 import GerenciarFuncionarios from './Components/Funcionario/GerenciarFuncionarios';
+import GerenciarClientes from './Components/Cliente/GerenciarClientes';
 
 export default class App extends Component{
+
+  
+  
   render(){
     return (
       <BrowserRouter>
@@ -42,6 +46,9 @@ export default class App extends Component{
             </Route>
             <Route path="/funcionarios/GerenciarFuncionarios">
               <GerenciarFuncionarios/>
+            </Route>
+            <Route path="/Clientes/GerenciarClientes">
+              <GerenciarClientes/>
             </Route>
             </Switch>
           <Footer/>

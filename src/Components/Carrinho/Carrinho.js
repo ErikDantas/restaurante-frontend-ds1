@@ -5,8 +5,9 @@ import { Component } from "react";
 export default class Carrinho extends Component{
     state = {
         auxqtdecarrinho: "",
-        itensdocarrinho: []
-    }
+        itensdocarrinho: [],
+        valortotalcarrinho: 0
+       }
 
     limparCarrinho = () => {
         const url = window.servidor + '/item/carrinho/limpar'
@@ -26,12 +27,13 @@ export default class Carrinho extends Component{
         .then(response => response.json())
         .then((data) => {
             this.setState({itensdocarrinho: data})
-            console.log(this.state.itensdocarrinho)
         })
     }
 
+
     componentDidMount(){
         this.getCarrinho()
+        
     }
 
 
@@ -85,7 +87,9 @@ export default class Carrinho extends Component{
                                     <p>Valor do Frete</p>
                                 </li>
                                 <li className="list-group-item">
-                                    <h4>Valor Total: </h4>
+                                    <h4>Valor Total:
+                                        
+                                    </h4>
                                 </li>
                             </ul>
                         </div>
