@@ -2,3 +2,14 @@
     background-color: rgb(186, 238, 43);
 }
 
+
+.fontetexto{
+    font-size: 12pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: normal;
+}
+
+
+.bg-ds1-primary{
+    background-color: rgb(50, 65, 124);
+}

@@ -1,14 +1,13 @@
 import { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 //import {cpf} from 'cpf-cnpj-validator';
 
 
+
 toast.configure()
 export default class ClienteLoginCadastro extends Component{
-
-    
 
     state = {
         id: "",
@@ -17,9 +16,20 @@ export default class ClienteLoginCadastro extends Component{
         email: "",
         senha: "",
         senha2: "",
-        telefone: ""
+        telefone: "",
+        clienteLogin: "",
+        TipoLogin: "",
+        redirecionar: false
     }
-    
+
+
+    funcSetTipoLogin = e => {
+        this.setState({TipoLogin: e.target.value})
+    }
+
+
+
+
     funcNomeChange = (event) => {
         this.setState({nome: event.target.value})
     }
@@ -40,11 +50,11 @@ export default class ClienteLoginCadastro extends Component{
     }
 
     efetuarLogin = () => {
-        const flogin = {
-            "login":this.state.email,
+        var flogin = {
+            "email":this.state.email,
             "senha":this.state.senha
         }
-        const requestOptions = {
+        var requestOptions = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,17 +62,62 @@ export default class ClienteLoginCadastro extends Component{
             body: JSON.stringify(flogin)
         }
 
-        const url = window.servidor + '/funcionario/login'
-        fetch(url,requestOptions)
-            .then(response => {
-                console.log(response.status)
+        if(this.state.TipoLogin === "funcionario"){
+            var clogin = {
+                "login":this.state.email,
+                "senha":this.state.senha
+            }
+            var requestOption = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(clogin)
+            }
+            var url = window.servidor + '/funcionario/login'
+            fetch(url,requestOption)
+                .then(response => response.json())
+                .then(data => this.setState({clienteLogin: data}) )
+                .then(() => {
+                    let nomeUsuario = this.state.clienteLogin.nome;
+                    if(this.state.clienteLogin.nome==='null'){
+                        localStorage.setItem('NomeLogin','null')
+                    }else{
+                        localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        toast.success('Benvindo '+ nomeUsuario)
+                        localStorage.setItem('TipoDeLogin','funcionario')
+                        this.setState({redirecionar: true})
+                        window.location.reload()
 
-            })
-
+                    }
+                    
+                })
+        }else{
             
-            
 
+            var purl = window.servidor + '/cliente/login'
+            fetch(purl,requestOptions)
+                .then(response => response.json())
+                .then(data => this.setState({clienteLogin: data}) )
+                .then(() => {
+                    let nomeUsuario = this.state.clienteLogin.nome;
+                    if(this.state.clienteLogin.nome==='null'){
+                        localStorage.setItem('NomeLogin','null')
+                    }else{
+                        localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        localStorage.setItem('TipoDeLogin','cliente')
+                        this.setState({redirecionar: true})
+                        toast.success('Benvindo '+ nomeUsuario)
+                        window.location.reload()
+
+                    }          
+                })
+        }      
     }
+
+
+
+
 
     gravarCliente = () => {
         if(this.state.senha === this.state.senha2){
@@ -93,15 +148,14 @@ export default class ClienteLoginCadastro extends Component{
             
             
         }else{
+            console.log(this.state.mascara)
             toast.error('As senhas inseridas não conferem. ');
         }
         
     }
 
-
-
-    render(){
-        return(
+    renderTelaDeLogin = () => {
+        return (
             <div className="mt-5 p-3 row">
                 <div className="col-4 mt-2 container-fluid">
                     <div className="accordion" id="accordionLogin">
@@ -115,13 +169,25 @@ export default class ClienteLoginCadastro extends Component{
                                 <div className="accordion-body mt-3">
                                     <form>
                                         <div className="form-group mb-3">
-                                            <label>Email</label>
-                                            <input type="email" className="form-control" id="InputEmail1" aria-describedby="emailHelplogin" placeholder="Enter email"/>
-                                            <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            <label>Email / Login</label>
+                                            <input type="email" required value={this.state.email} onChange={this.funcEmailChange} className="form-control" id="InputEmail1" aria-describedby="emailHelplogin" placeholder="Insira o email ou login"/>
+                                            <small id="emailHelp" className="form-text text-muted">Nome de usuário ou e-mail.</small>
                                         </div>
                                         <div className="form-group">
                                             <label>Password</label>
-                                            <input type="password" className="form-control" id="exampleInputPasswordLogin" placeholder="Password"/>
+                                            <input type="password" required value={this.state.senha} onChange={this.funcSenhaChange} className="form-control" id="exampleInputPasswordLogin" placeholder="Password"/>
+                                        </div>
+                                        <div className="form-check mt-3">
+                                            <input className="form-check-input" value="funcionario" onChange={this.funcSetTipoLogin} type="radio" checked={this.state.TipoLogin === "funcionario"}/>
+                                            <label className="form-check-label">
+                                                Funcionário
+                                            </label>
+                                            </div>
+                                            <div className="form-check">
+                                            <input className="form-check-input" value="cliente" onChange={this.funcSetTipoLogin} type="radio" checked={this.state.TipoLogin === "cliente"}/>
+                                            <label className="form-check-label">
+                                                Cliente
+                                            </label>
                                         </div>
                                         <div className="p-3">
                                             <Link to="/PasswordForget">
@@ -179,6 +245,26 @@ export default class ClienteLoginCadastro extends Component{
                     </div>
                 </div>
             </div>
+        )
+    }
+
+
+    renderRedirecionar = () => {
+        return (
+            <Redirect to="/"></Redirect>
+        )
+    }
+
+
+    render(){
+        let tela = ''
+        if(this.state.redirecionar){
+            tela=this.renderRedirecionar()
+        }else{
+            tela=this.renderTelaDeLogin()
+        }
+        return(
+            tela
         )
     }
 }

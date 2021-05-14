@@ -34,7 +34,7 @@ export default class Reserva extends Component{
                         <input className="form-control" type="tel" id="telefone-input"/>
                     </div>
                     <div className="mb-3 text-center">
-                        <h6>Já possui cadastro? <Link to="/Cadastro">Clique aqui</Link> para acessar</h6>
+                        <h6>Já possui cadastro? <Link to="/ClienteLoginCadastro">Clique aqui</Link> para acessar</h6>
                     </div>
                     <div className="text-center">
                         <button type="button" className="btn btn-success">Solicitar</button>
