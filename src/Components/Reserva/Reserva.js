@@ -8,10 +8,8 @@ export default class Reserva extends Component{
     render(){
         return(
             <div className="row mt-5 p-3 mb-5">  
-                <div className="col-4 mt-2 container-fluid">
-                    <u>
-                        <h5 className="text-center">Solicitar Reserva</h5>
-                    </u>
+                <div className="col-4 mt-4 container-fluid">
+                        <h2 className="text-center mb-5">Solicitar Reserva</h2>
                     <div className="mb-3">
                         <label className="col-form-label">Data e Hora da Reserva</label>
                         <input className="form-control" type="datetime-local" id="datetime-local-input"/>

@@ -119,7 +119,7 @@ export default class GerenciarFuncionarios extends Component{
         return(
             <div className="row mt-5 mb-5 ">
                 <div>
-                    <h2 className="p-3 text-center mt-4">Gerênciar Funcionários</h2>
+                    <h2 className="p-3 text-center mt-4">Gerenciar Funcionários</h2>
                 </div>
                 <div>
                     <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" className="btn btn-primary"><i className="bi bi-person-plus"></i> Adicionar Funcionário</button>
