@@ -31,7 +31,7 @@ export default class GerenciarClientes extends Component{
         return(
             <div className="row mt-5 mb-5">
                 <div>
-                    <h2 className="p-3 text-center">Cardápio</h2>
+                    <h2 className="p-3 text-center mt-4">Gerenciar Clientes</h2>
                 </div>
                 <div className="mt-5 container">
                     <table className="table table-hover table-responsive table-striped">
