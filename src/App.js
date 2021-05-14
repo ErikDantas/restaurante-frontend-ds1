@@ -5,7 +5,6 @@ import Cardapio from './Components/Cardapio/Cardapio';
 import Carrinho from './Components/Carrinho/Carrinho';
 import Cliente from './Components/Layout/LoginCadastro';
 import Footer from './Components/Layout/Footer';
-import Gerente from './Components/Gerente/GerenteCadastroItem';
 import Home from './Components/Layout/Home';
 import Menu from './Components/Layout/Menu';
 import Mesa from './Components/Mesa/Mesa';
@@ -32,9 +31,6 @@ export default class App extends Component{
             </Route>
             <Route path="/ClienteLoginCadastro">
               <Cliente/>
-            </Route>
-            <Route path="/GerenteCadastroItem">
-              <Gerente/>
             </Route>
             <Route path="/Reservas">
               <Reserva/>
