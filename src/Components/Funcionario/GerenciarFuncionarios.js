@@ -1,5 +1,6 @@
 import { Component } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import './FuncionarioCSS.css'
 
 
 export default class GerenciarFuncionarios extends Component{
@@ -10,6 +11,7 @@ export default class GerenciarFuncionarios extends Component{
         cargo: "",
         login: "",
         senha: "",
+        endereco: "",
         gerente: "false",
         cpf: "",
         email: "",
@@ -17,12 +19,42 @@ export default class GerenciarFuncionarios extends Component{
         numero: "",
         complemento: "",
         cidade: "",
-        uf: "",
+        uf: [],
+        ufselecionado: "",
+        bairroselecionado: "",
         cep: "",
-        bairro: "",
+        bairro: [],
         valorFrete: "",
-        funcionarios: []
+        funcionarios: [],
+        idendereco: ""
+    }
 
+    
+
+    funcLogradouroChange = (event) => {
+        this.setState({logradouro: event.target.value})
+    }
+    funcNumeroChange = (event) => {
+        this.setState({numero: event.target.value})
+    }
+    funcComplementoChange = (event) => {
+        this.setState({complemento: event.target.value})
+    }
+
+    funcBairroChange = (event) => {
+        this.setState({bairroselecionado: event.target.value})
+    }
+
+    funcUfChange = (event) => {
+        this.setState({ufselecionado: event.target.value})
+    }
+
+    funcCidadeChange = (event) => {
+        this.setState({cidade: event.target.value})
+    }
+
+    funcCepChange = (event) => {
+        this.setState({cep: event.target.value})
     }
 
     funcNomeChange = (event) => {
@@ -56,12 +88,35 @@ export default class GerenciarFuncionarios extends Component{
             .then((data) => {
                 this.setState({funcionarios: data}
             
-                    )})
+            )})
             
     }
 
+    getAllTipoUf = () => {
+        const url = window.servidor + '/endereco/tipouf'
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({uf: data},
+            )})
+            
+    }
+
+    getAllBairros = () => {
+        const url = window.servidor + '/bairro/'
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({bairro: data}
+            )})
+            
+    }
+
+
     componentDidMount(){
         this.preencherTabelaFuncionarios()
+        this.getAllTipoUf()
+        this.getAllBairros()
     }
 
     gravarNovoFuncionario = () => {
@@ -86,7 +141,7 @@ export default class GerenciarFuncionarios extends Component{
 
         const url = window.servidor + "/funcionario/incluir"
 
-        if(novofuncionario.cpf.length!==0 && novofuncionario.senha.length!==0 && novofuncionario.login.length!==0 && novofuncionario.cargo.length!==0){
+        if(novofuncionario.cpf.length!==0 && novofuncionario.senha.length>=4 && novofuncionario.login.length>=4 && novofuncionario.cargo.length!==0){
             fetch(url, requestOptions)
             .then((dados) => {
                 if(dados.status===200){
@@ -102,7 +157,17 @@ export default class GerenciarFuncionarios extends Component{
 
     deletarFuncionario = (x) => {
         const url = window.servidor + '/funcionario/'+x.matricula
-        fetch(url)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        
+
+        fetch(url,requestOptions)
             .then((response) => {
                 if(response.status===200){
                     toast.success("Funcionário deletado com sucesso.")
@@ -115,9 +180,42 @@ export default class GerenciarFuncionarios extends Component{
     }
 
 
+    atualizarEndereco = (x) => {
+        const dados = {
+            logradouro: this.state.logradouro,
+            numero: this.state.numero,
+            complemento: this.state.complemento,
+            bairro: this.state.bairroselecionado,
+            cidade: this.state.cidade,
+            uf: this.state.ufselecionado,
+            cep: this.state.cep
+        }
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        };
+
+        const url = window.servidor + "/endereco/incluir"
+
+            fetch(url, requestOptions)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data)
+                })
+        
+
+
+    }
+
+
     render(){
         return(
             <div className="row mt-5 mb-5 ">
+                <ToastContainer/>
                 <div>
                     <h2 className="p-3 text-center mt-4">Gerênciar Funcionários</h2>
                 </div>
@@ -191,6 +289,7 @@ export default class GerenciarFuncionarios extends Component{
                                     <th scope="col">Gerente?</th>
                                     <th scope="col">CPF</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Endereço</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -205,13 +304,77 @@ export default class GerenciarFuncionarios extends Component{
                                         <td>{(funcionario.gerente).toString()}</td>
                                         <td>{funcionario.cpf}</td>
                                         <td>{funcionario.email}</td>
+                                        <td>{(funcionario.endereco.logradouro) + " / nº " + (funcionario.endereco.numero)
+                                        + " Bairro: " + (funcionario.endereco.bairro.nome)}</td>
                                         <td className="text-center">
                                             <div className="btn-group"> 
                                                 <div className="p-1">
                                                     <button className="btn btn-sm btn-info"><i className="bi bi-pencil-square"></i> Editar</button>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button onClick={() => this.deletarFuncionario(funcionario)} className="btn btn-sm btn-warning"><i className="bi bi-trash"></i> Deletar</button>
+                                                    <button onClick={() => this.deletarFuncionario(funcionario)} className="btn btn-sm btn-danger"><i className="bi bi-trash"></i> Deletar</button>
+                                                </div>
+                                                <div className="p-1">
+                                                    <button data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
+                                                </div>
+                                                <div className="p-1">
+                                                    <button className="btn btn-sm btn-warning"><i className="bi bi-phone"></i> Telefone</button>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                                                    <div className="offcanvas-header">
+                                                        <h5 id="offcanvasRightLabel">Endereço do {funcionario.nome}</h5>
+                                                        <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                    </div>
+                                                    <hr></hr>
+
+                                                    <div className="offcanvas-body textleft">
+                                                        <form className="form-group">
+                                                            <div className="col-10">
+                                                                <label className="form-label">Logradouro</label>
+                                                                <input disabled={this.state.btndisable} value={this.state.logradouro} onChange={this.funcLogradouroChange} type="text" className="form-control" autoFocus></input>
+                                                            </div>
+                                                            <div className="col-5 mt-2">
+                                                                <label className="form-label">Número</label>
+                                                                <input value={this.state.numero} onChange={this.funcNumeroChange} type="number" className="form-control" ></input>
+                                                            </div>
+                                                            <div className="col-12 mt-2">
+                                                                <label className="form-label">Complemento</label>
+                                                                <input value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
+                                                            </div>
+                                                            <div className="col-7 mt-2">
+                                                                <label className="form-label">Bairro</label>
+                                                                <select value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
+                                                                    {this.state.bairro && this.state.bairro.map(x => {
+                                                                        return <option key={x.id} value={x.id}>{x.nome}</option>
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                            <div className="col-6 mt-2">
+                                                                <label className="form-label">Cidade</label>
+                                                                <input value={this.state.funcCidadeChange} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
+                                                            </div>
+                                                            <div className="col-5 mt-2">
+                                                                <label className="form-label">UF</label>
+                                                                <select onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
+                                                                    {this.state.uf && this.state.uf.map(opcao => {
+                                                                        return <option key={opcao} value={opcao}>{opcao}</option>
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                            <div className="col-5 mt-2">
+                                                                <label className="form-label">Cep</label>
+                                                                <input value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
+                                                            </div>
+                                                            <hr></hr>
+                                                            <div className="btn-group">
+                                                                <div className="p-1">
+                                                                    <button onClick={() => this.atualizarEndereco(funcionario)} className="btn btn-success">Salvar</button>
+                                                                </div> 
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
