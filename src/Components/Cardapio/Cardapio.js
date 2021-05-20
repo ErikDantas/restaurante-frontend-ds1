@@ -11,7 +11,8 @@ export default class Cardapio extends Component{
         tempoPreparo: "",
         qtdRefeicao: "",
         itens: [],
-        qtdecarrinho: ""
+        qtdecarrinho: "",
+        valortotal:0
     }
 
     preencherTabelaItens = () => {
@@ -19,25 +20,20 @@ export default class Cardapio extends Component{
         fetch(url)
             .then(response => response.json())
             .then(data => this.setState({itens: data}))
-            .then(()=>{
-                console.log(this.state.itens)
-            })
     }
 
 
     adicionarAoCarrinho = (e) => {
 
         const url = window.servidor + '/item/carrinho/add/'+e.id
-
         fetch(url)
             .then(response => response.json())
             .then((data) => {
                 this.setState({qtdecarrinho: data})
                 sessionStorage.setItem('qtdecarrinho',this.state.qtdecarrinho)
-                console.log(this.state.qtdecarrinho)
                 window.location.reload()
             })
-
+            
 
     }
 

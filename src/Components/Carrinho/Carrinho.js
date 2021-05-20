@@ -21,6 +21,7 @@ export default class Carrinho extends Component{
     }
 
 
+
     getCarrinho = () => {
         const url = window.servidor + '/item/carrinho'
         fetch(url)
@@ -31,11 +32,49 @@ export default class Carrinho extends Component{
     }
 
 
+    getValorTotal = () => {
+
+        const urlvalortotal = window.servidor + '/item/carrinho/valortotal'
+
+        fetch(urlvalortotal)
+        .then(response => response.json())
+        .then(data => this.setState({valortotalcarrinho: data}))
+    }
+
+
     componentDidMount(){
         this.getCarrinho()
+        this.getValorTotal()
         
     }
 
+
+    adicionarAoCarrinho = (e) => {
+
+        const url = window.servidor + '/item/carrinho/add/'+e
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({qtdecarrinho: data})
+                sessionStorage.setItem('qtdecarrinho',this.state.qtdecarrinho)
+                window.location.reload()
+            })
+            
+
+    }
+    removerDoCarrinho = (e) => {
+
+        const url = window.servidor + '/item/carrinho/remover/'+e
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({qtdecarrinho: data})
+                sessionStorage.setItem('qtdecarrinho',this.state.qtdecarrinho)
+                window.location.reload()
+            })
+            
+
+    }
 
 
     render(){
@@ -68,7 +107,7 @@ export default class Carrinho extends Component{
                                         <td>{item[1]}</td>
                                         <td>{item[2]}</td>
                                         <td>{parseFloat(item[3]).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
-                                        <td><button className="btn"><i className="bi bi-bag-dash p-2"></i></button>{item[4]}<button className="btn"><i className="bi bi-bag-plus p-2"></i></button></td>
+                                        <td><button onClick={()=>this.removerDoCarrinho(item[0])} className="btn"><i className="bi bi-bag-dash p-2"></i></button>{item[4]}<button onClick={() => this.adicionarAoCarrinho(item[0])} className="btn"><i className="bi bi-bag-plus p-2"></i></button></td>
                                         <td>{(item[3]*item[4]).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
                                     </tr>
                                 })}
@@ -88,7 +127,7 @@ export default class Carrinho extends Component{
                                 </li>
                                 <li className="list-group-item">
                                     <h4>Valor Total:
-                                        
+                                        {(this.state.valortotalcarrinho).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
                                     </h4>
                                 </li>
                             </ul>

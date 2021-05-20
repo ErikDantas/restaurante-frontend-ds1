@@ -37,6 +37,9 @@ export default class GerenciarCardapio extends Component{
         console.info(url)
         fetch(url, requestOptions)
             .then(this.preencherTabelaItens())
+            .then(() => {
+                this.componentDidMount()
+            })
             .catch(erro => console.log(erro));
     }
 
@@ -90,6 +93,7 @@ export default class GerenciarCardapio extends Component{
             .then(response => {
                 if(response.status === 200){
                     toast.success('Item cadastrado com sucesso.')
+                    this.componentDidMount()
                 }else{
                     toast.error('Falha durante o cadastro.')
                 }
@@ -166,7 +170,7 @@ export default class GerenciarCardapio extends Component{
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={ () => this.preencherTabelaItens(this.state.id) } data-bs-dismiss="modal">Fechar</button>
-                                    <button type="button" className="btn btn-primary" onClick={ () => this.gravarItem() }>Salvar</button>
+                                    <button type="button" className="btn btn-primary" onClick={ () => this.gravarItem() } data-bs-dismiss="modal">Salvar</button>
                                 </div>
                                 </div>
                             </div>

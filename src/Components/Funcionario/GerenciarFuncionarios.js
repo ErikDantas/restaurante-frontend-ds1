@@ -26,10 +26,19 @@ export default class GerenciarFuncionarios extends Component{
         bairro: [],
         valorFrete: "",
         funcionarios: [],
-        idendereco: ""
+        idendereco: "",
+        funcionarioselecionado: ""
     }
 
-    
+    enderecoNull = (x) => 
+    {
+        if(x.endereco===null){
+            return <div> - </div>
+        }else{
+            return <div>{(x.endereco.logradouro)+" / Nº "+(x.endereco.numero) + " / Bairro: "+(x.endereco.bairro.nome)}</div>
+        }
+        
+    }
 
     funcLogradouroChange = (event) => {
         this.setState({logradouro: event.target.value})
@@ -304,8 +313,8 @@ export default class GerenciarFuncionarios extends Component{
                                         <td>{(funcionario.gerente).toString()}</td>
                                         <td>{funcionario.cpf}</td>
                                         <td>{funcionario.email}</td>
-                                        <td>{(funcionario.endereco.logradouro) + " / nº " + (funcionario.endereco.numero)
-                                        + " Bairro: " + (funcionario.endereco.bairro.nome)}</td>
+                                        <td>{this.enderecoNull(funcionario)}</td>
+
                                         <td className="text-center">
                                             <div className="btn-group"> 
                                                 <div className="p-1">
@@ -315,68 +324,69 @@ export default class GerenciarFuncionarios extends Component{
                                                     <button onClick={() => this.deletarFuncionario(funcionario)} className="btn btn-sm btn-danger"><i className="bi bi-trash"></i> Deletar</button>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
+                                                    <button onClick={() => this.setState({funcionarioselecionado: funcionario})} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
+                                                    <div>
+                                                        <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                                                            <div className="offcanvas-header">
+                                                                <h5 id="offcanvasRightLabel">Endereço do {this.state.funcionarioselecionado.nome}</h5>
+                                                                <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                            </div>
+                                                            <hr></hr>
+
+                                                            <div className="offcanvas-body textleft">
+                                                                <form className="form-group">
+                                                                    <div className="col-10">
+                                                                        <label className="form-label">Logradouro</label>
+                                                                        <input disabled={this.state.btndisable} value={this.state.logradouro} onChange={this.funcLogradouroChange} type="text" className="form-control" autoFocus></input>
+                                                                    </div>
+                                                                    <div className="col-5 mt-2">
+                                                                        <label className="form-label">Número</label>
+                                                                        <input value={this.state.numero} onChange={this.funcNumeroChange} type="number" className="form-control" ></input>
+                                                                    </div>
+                                                                    <div className="col-12 mt-2">
+                                                                        <label className="form-label">Complemento</label>
+                                                                        <input value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
+                                                                    </div>
+                                                                    <div className="col-7 mt-2">
+                                                                        <label className="form-label">Bairro</label>
+                                                                        <select value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
+                                                                            {this.state.bairro && this.state.bairro.map(x => {
+                                                                                return <option key={x.id} value={x.id}>{x.nome}</option>
+                                                                            })}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="col-6 mt-2">
+                                                                        <label className="form-label">Cidade</label>
+                                                                        <input value={this.state.funcCidadeChange} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
+                                                                    </div>
+                                                                    <div className="col-5 mt-2">
+                                                                        <label className="form-label">UF</label>
+                                                                        <select onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
+                                                                            {this.state.uf && this.state.uf.map(opcao => {
+                                                                                return <option key={opcao} value={opcao}>{opcao}</option>
+                                                                            })}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="col-5 mt-2">
+                                                                        <label className="form-label">Cep</label>
+                                                                        <input value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
+                                                                    </div>
+                                                                    <hr></hr>
+                                                                    <div className="btn-group">
+                                                                        <div className="p-1">
+                                                                            <button onClick={() => this.atualizarEndereco(this.state.funcionarioselecionado)} className="btn btn-success">Salvar</button>
+                                                                        </div> 
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div className="p-1">
                                                     <button className="btn btn-sm btn-warning"><i className="bi bi-phone"></i> Telefone</button>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                                                    <div className="offcanvas-header">
-                                                        <h5 id="offcanvasRightLabel">Endereço do {funcionario.nome}</h5>
-                                                        <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                                    </div>
-                                                    <hr></hr>
-
-                                                    <div className="offcanvas-body textleft">
-                                                        <form className="form-group">
-                                                            <div className="col-10">
-                                                                <label className="form-label">Logradouro</label>
-                                                                <input disabled={this.state.btndisable} value={this.state.logradouro} onChange={this.funcLogradouroChange} type="text" className="form-control" autoFocus></input>
-                                                            </div>
-                                                            <div className="col-5 mt-2">
-                                                                <label className="form-label">Número</label>
-                                                                <input value={this.state.numero} onChange={this.funcNumeroChange} type="number" className="form-control" ></input>
-                                                            </div>
-                                                            <div className="col-12 mt-2">
-                                                                <label className="form-label">Complemento</label>
-                                                                <input value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
-                                                            </div>
-                                                            <div className="col-7 mt-2">
-                                                                <label className="form-label">Bairro</label>
-                                                                <select value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
-                                                                    {this.state.bairro && this.state.bairro.map(x => {
-                                                                        return <option key={x.id} value={x.id}>{x.nome}</option>
-                                                                    })}
-                                                                </select>
-                                                            </div>
-                                                            <div className="col-6 mt-2">
-                                                                <label className="form-label">Cidade</label>
-                                                                <input value={this.state.funcCidadeChange} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
-                                                            </div>
-                                                            <div className="col-5 mt-2">
-                                                                <label className="form-label">UF</label>
-                                                                <select onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
-                                                                    {this.state.uf && this.state.uf.map(opcao => {
-                                                                        return <option key={opcao} value={opcao}>{opcao}</option>
-                                                                    })}
-                                                                </select>
-                                                            </div>
-                                                            <div className="col-5 mt-2">
-                                                                <label className="form-label">Cep</label>
-                                                                <input value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
-                                                            </div>
-                                                            <hr></hr>
-                                                            <div className="btn-group">
-                                                                <div className="p-1">
-                                                                    <button onClick={() => this.atualizarEndereco(funcionario)} className="btn btn-success">Salvar</button>
-                                                                </div> 
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                         </td>
                                     </tr>
                                 })}
