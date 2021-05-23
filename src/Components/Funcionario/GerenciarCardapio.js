@@ -1,20 +1,29 @@
 import React, { Component } from 'react'
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 toast.configure()
 export default class GerenciarCardapio extends Component{
 
     state = {
         id: "",
+
         nome: "",
         valor: "",
         tipoItem: "0",
         tempoPreparo: "",
         qtdRefeicao: "",
+
         alterando: false,
         itens: [],
-        tipositens: []
+        tipositens: [],
+        itemSelecionado: "",
+        nomeSelecionado: "",
+        valorSelecionado: "",
+        tipoItemSelecionado: "0",
+        tempoPreparoSelecionado: "",
+        qtdRefeicaoSelecionado: ""
     }
 
     preencherTabelaItens = () => {
@@ -46,6 +55,11 @@ export default class GerenciarCardapio extends Component{
     componentDidMount(){
         this.preencherTabelaItens()
         this.getTipoItem()
+    }
+
+
+    funcItemSelecionadoChange = (event) => {
+        this.setState({itemSelecionado: event.target.value})
     }
 
     funcNomeChange = (event) => {
@@ -97,6 +111,46 @@ export default class GerenciarCardapio extends Component{
                 }else{
                     toast.error('Falha durante o cadastro.')
                 }
+            })
+            .catch(erro => console.log(erro));
+    }
+
+    iniciarAlterar = (item) => {
+        this.setState({
+            alterando: true,
+            id: item.id,
+            nome: item.nome,
+            tipoItem: item.tipoItem,
+            valor: item.valor,
+            qtdRefeicao: item.qtdRefeicao,
+            tempoPreparo: item.tempoPreparo
+        })
+    }
+
+    alterarItem = (item) => {
+        const dados = {
+            id: this.state.id,
+            nome: this.state.nome,
+            tipoItem: this.state.tipoItem,
+            valor: this.state.valor,
+            qtdRefeicao: this.state.qtdRefeicao,
+            tempoPreparo: this.state.tempoPreparo
+        }
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        };
+
+        const url = window.servidor + "/item/alterar/" + item.id
+
+            fetch(url, requestOptions)
+            .then(this.setState({alterando: false}))
+            .then(() => {
+                this.componentDidMount()
             })
             .catch(erro => console.log(erro));
     }
@@ -203,10 +257,55 @@ export default class GerenciarCardapio extends Component{
                                         <td className="text-center">
                                             <div className="btn-group"> 
                                                 <div className="p-1">
-                                                    <button className="btn btn-sm btn-info"><i className="bi bi-pencil-square"></i> Editar</button>
+                                                    <button className="btn btn-sm btn-info" onClick={() => this.setState({itemSelecionado: item}), () => this.iniciarAlterar(item)}
+                                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" >
+                                                        <i className="bi bi-pencil-square"></i> Editar</button>
+                                                    <div>
+                                                        <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                                                            <div className="offcanvas-header">
+                                                                <h5 id="offcanvasRightLabel">Editar {this.state.itemSelecionado.nome}</h5>
+                                                                <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                            </div>
+                                                            <hr></hr>
+
+                                                            <div className="offcanvas-body textleft">
+                                                                <form className="form-group">
+                                                                    <div className="col-10">
+                                                                        <label className="form-label">Nome do Item</label>
+                                                                        <input value={this.state.nome} onChange={this.funcNomeChange} type="text" className="form-control" autoFocus></input>
+                                                                    </div>
+                                                                    <div className="col-10 mt-3">
+                                                                        <label className="form-label">Tipo</label>
+                                                                        <select value={this.state.tipoItem} onChange={this.funcTipoItemChange} className="form-select" id="inputGroupSelect01">
+                                                                            {this.state.tipositens && this.state.tipositens.map( item => {
+                                                                                return <option>{item}</option>
+                                                                            })}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="col-12 mt-3">
+                                                                        <label className="form-label">Quantidade</label>
+                                                                        <input value={this.state.qtdRefeicao} onChange={this.funcQtdRefeicaoChange} type="number" className="form-control" ></input>
+                                                                    </div>
+                                                                    <div className="col-7 mt-3">
+                                                                        <label className="form-label">Valor</label>
+                                                                        <input value={this.state.valor} onChange={this.funcValorChange} type="number" className="form-control" ></input>
+                                                                    </div>
+                                                                    <hr></hr>
+                                                                    <div className="btn-group">
+                                                                        <div className="p-1">
+                                                                            <button onClick={() => this.alterarItem(this.state)} className="btn btn-success">Salvar</button>
+                                                                        </div> 
+                                                                    </div>
+                                                                    
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
                                                 </div>
                                                 <div className="p-1">
-                                                    <button className="btn btn-sm btn-warning" onClick={ () => this.funcApagaItem(item)} ><i className="bi bi-trash"></i> Deletar</button>
+                                                    <button className="btn btn-sm btn-danger" onClick={() => this.funcApagaItem(item)} ><i className="bi bi-trash"></i> Deletar</button>
                                                 </div>
                                             </div>
                                         </td>
@@ -220,3 +319,4 @@ export default class GerenciarCardapio extends Component{
         )
     }
 }
+
