@@ -26,9 +26,18 @@ export default class GerenciarFuncionarios extends Component{
         bairro: [],
         valorFrete: "",
         funcionarios: [],
-        idendereco: "",
+        idendereco: 0,
         funcionarioselecionado: ""
     }
+
+    gerenteIsNull = (x) => {
+        if(x.gerente===null){
+            return <div>False</div>
+        }else{
+            return <div>{(x.gerente).toString()}</div>
+        }
+    }
+
 
     enderecoNull = (x) => 
     {
@@ -189,16 +198,18 @@ export default class GerenciarFuncionarios extends Component{
     }
 
 
-    atualizarEndereco = (x) => {
+    atualizarEndereco = () => {
         const dados = {
             logradouro: this.state.logradouro,
             numero: this.state.numero,
             complemento: this.state.complemento,
-            bairro: this.state.bairroselecionado,
+            bairro: {
+                id: this.state.bairroselecionado
+            },
             cidade: this.state.cidade,
             uf: this.state.ufselecionado,
             cep: this.state.cep
-        }
+        };
 
         const requestOptions = {
             method: 'POST',
@@ -209,16 +220,50 @@ export default class GerenciarFuncionarios extends Component{
         };
 
         const url = window.servidor + "/endereco/incluir"
-
             fetch(url, requestOptions)
                 .then(response => response.json())
-                .then((data) => {
-                    console.log(data)
+                .then(data => this.setState({idendereco: data}))
+                .then(() => {
+                    if(this.state.idendereco >0){
+                        this.atualizarEnderecoFuncionario();
+                    }
                 })
-        
-
-
     }
+
+    atualizarEnderecoFuncionario(){
+        const aux ={
+            nome: this.state.funcionarioselecionado.nome,
+            cargo: this.state.funcionarioselecionado.cargo,
+            login: this.state.funcionarioselecionado.login,
+            senha: this.state.funcionarioselecionado.senha,
+            gerente: this.state.funcionarioselecionado.gerente,
+            cpf: this.state.funcionarioselecionado.cpf,
+            endereco: {
+                id: this.state.idendereco
+            },
+            email: this.state.funcionarioselecionado.email
+        }
+        const rOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(aux)
+        };
+
+        const url = window.servidor+'/funcionario/alterar/'+this.state.funcionarioselecionado.matricula
+        fetch(url,rOptions)
+            .then((response) => {
+                response.json()
+                if(response.status===200){
+                    toast.success("Endereço atualizado.")
+                }else{
+                    toast.error("Falha ao atualizar endereço.")
+                }
+            })
+    }
+
+
 
 
     render(){
@@ -310,7 +355,7 @@ export default class GerenciarFuncionarios extends Component{
                                         <td>{funcionario.cargo}</td>
                                         <td>{funcionario.login}</td>
                                         <td>{funcionario.senha}</td>
-                                        <td>{(funcionario.gerente).toString()}</td>
+                                        <td>{this.gerenteIsNull(funcionario)}</td>
                                         <td>{funcionario.cpf}</td>
                                         <td>{funcionario.email}</td>
                                         <td>{this.enderecoNull(funcionario)}</td>
@@ -350,6 +395,7 @@ export default class GerenciarFuncionarios extends Component{
                                                                     <div className="col-7 mt-2">
                                                                         <label className="form-label">Bairro</label>
                                                                         <select value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
+                                                                            <option>Selecione....</option>
                                                                             {this.state.bairro && this.state.bairro.map(x => {
                                                                                 return <option key={x.id} value={x.id}>{x.nome}</option>
                                                                             })}
@@ -362,6 +408,7 @@ export default class GerenciarFuncionarios extends Component{
                                                                     <div className="col-5 mt-2">
                                                                         <label className="form-label">UF</label>
                                                                         <select onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
+                                                                            <option>Selecione....</option>
                                                                             {this.state.uf && this.state.uf.map(opcao => {
                                                                                 return <option key={opcao} value={opcao}>{opcao}</option>
                                                                             })}
@@ -374,7 +421,7 @@ export default class GerenciarFuncionarios extends Component{
                                                                     <hr></hr>
                                                                     <div className="btn-group">
                                                                         <div className="p-1">
-                                                                            <button onClick={() => this.atualizarEndereco(this.state.funcionarioselecionado)} className="btn btn-success">Salvar</button>
+                                                                            <button onClick={() => this.atualizarEndereco()} className="btn btn-success">Salvar</button>
                                                                         </div> 
                                                                     </div>
                                                                 </form>
