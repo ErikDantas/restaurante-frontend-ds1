@@ -44,7 +44,7 @@ export default class GerenciarFuncionarios extends Component{
         if(x.endereco===null){
             return <div> - </div>
         }else{
-            return <div>{(x.endereco.logradouro)+" / Nº "+(x.endereco.numero) + " / Bairro: "+(x.endereco.bairro.nome)}</div>
+            return <div>{(x.endereco.logradouro)+" / Nº "+(x.endereco.numero)}</div>
         }
         
     }
@@ -161,8 +161,8 @@ export default class GerenciarFuncionarios extends Component{
 
         if(novofuncionario.cpf.length!==0 && novofuncionario.senha.length>=4 && novofuncionario.login.length>=4 && novofuncionario.cargo.length!==0){
             fetch(url, requestOptions)
-            .then((dados) => {
-                if(dados.status===200){
+            .then((response) => {
+                if(response.status===200){
                     this.preencherTabelaFuncionarios()
                     toast.success("Adicionado com sucesso.")
                 }
@@ -199,35 +199,63 @@ export default class GerenciarFuncionarios extends Component{
 
 
     atualizarEndereco = () => {
-        const dados = {
-            logradouro: this.state.logradouro,
-            numero: this.state.numero,
-            complemento: this.state.complemento,
-            bairro: {
-                id: this.state.bairroselecionado
-            },
-            cidade: this.state.cidade,
-            uf: this.state.ufselecionado,
-            cep: this.state.cep
-        };
+        if(this.state.funcionarioselecionado.endereco === null){
+            const dados = {
+                logradouro: this.state.logradouro,
+                numero: this.state.numero,
+                complemento: this.state.complemento,
+                bairro: {
+                    id: this.state.bairroselecionado
+                },
+                cidade: this.state.cidade,
+                uf: this.state.ufselecionado,
+                cep: this.state.cep
+            };
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dados)
-        };
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dados)
+            };
 
-        const url = window.servidor + "/endereco/incluir"
-            fetch(url, requestOptions)
-                .then(response => response.json())
-                .then(data => this.setState({idendereco: data}))
-                .then(() => {
-                    if(this.state.idendereco >0){
-                        this.atualizarEnderecoFuncionario();
-                    }
+            const url = window.servidor + "/endereco/incluir"
+                fetch(url, requestOptions)
+                    .then(response => response.json())
+                    .then(data => this.setState({idendereco: data}))
+                    .then(() => {
+                        if(this.state.idendereco >0){
+                            this.atualizarEnderecoFuncionario();
+                        }
+                    })
+        }else{
+            const dados = {
+                logradouro: this.state.logradouro,
+                numero: this.state.numero,
+                complemento: this.state.complemento,
+                bairro: {
+                    id: this.state.bairroselecionado
+                },
+                cidade: this.state.cidade,
+                uf: this.state.ufselecionado,
+                cep: this.state.cep
+            };
+
+            const requestOptions = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dados)
+            };
+
+            const url = window.servidor + "/endereco/alterar/"+this.state.funcionarioselecionado.endereco.id
+            fetch(url,requestOptions)
+                .then((response) => {
+                    console.log(response.status)
                 })
+        }
     }
 
     atualizarEnderecoFuncionario(){
@@ -255,6 +283,7 @@ export default class GerenciarFuncionarios extends Component{
         fetch(url,rOptions)
             .then((response) => {
                 response.json()
+                console.log(response.status)
                 if(response.status===200){
                     toast.success("Endereço atualizado.")
                 }else{
@@ -264,7 +293,21 @@ export default class GerenciarFuncionarios extends Component{
     }
 
 
+    editarEndereco = (f) => {
+        this.setState({funcionarioselecionado: f})
+        if(f.endereco === null){
 
+        }else{
+            this.setState({logradouro: f.endereco.logradouro})
+            this.setState({numero: f.endereco.numero})
+            this.setState({complemento: f.endereco.complemento})
+            this.setState({bairroselecionado: f.endereco.bairro.id})
+            this.setState({cidade: f.endereco.cidade})
+            this.setState({ufselecionado: f.endereco.uf})
+            this.setState({cep: f.endereco.cep})
+
+        }
+    }
 
     render(){
         return(
@@ -366,10 +409,34 @@ export default class GerenciarFuncionarios extends Component{
                                                     <button className="btn btn-sm btn-info"><i className="bi bi-pencil-square"></i> Editar</button>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button onClick={() => this.deletarFuncionario(funcionario)} className="btn btn-sm btn-danger"><i className="bi bi-trash"></i> Deletar</button>
+                                                    <button onClick={() => this.setState({funcionarioselecionado: funcionario}) } data-bs-toggle="modal" data-bs-target="#excluirfunc" className="btn btn-sm btn-danger"><i className="bi bi-trash"></i> Deletar</button>
+                                                    {/* MODAL PARA EXCLUIR FUNCIONÁRIO*/}
+                                                    <div class="modal fade" id="excluirfunc" tabIndex="-1" aria-labelledby="excluirfuncLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="excluirfuncLabel">Excluir - {this.state.funcionarioselecionado.nome}</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Deseja realmente excluir o funcionário abaixo?<p>
+                                                                        Matricula: {this.state.funcionarioselecionado.matricula}<p>
+                                                                            Nome: {this.state.funcionarioselecionado.nome}<p>
+                                                                                Cargo: {this.state.funcionarioselecionado.cargo}
+                                                                            </p>
+                                                                        </p>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button onClick={() => this.deletarFuncionario(this.state.funcionarioselecionado)} data-bs-dismiss="modal" type="button" class="btn btn-primary">Save changes</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button onClick={() => this.setState({funcionarioselecionado: funcionario})} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
+                                                    <button onClick={() => this.editarEndereco(funcionario)} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
                                                     <div>
                                                         <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                                                             <div className="offcanvas-header">
@@ -390,11 +457,11 @@ export default class GerenciarFuncionarios extends Component{
                                                                     </div>
                                                                     <div className="col-12 mt-2">
                                                                         <label className="form-label">Complemento</label>
-                                                                        <input value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
+                                                                        <input required value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
                                                                     </div>
                                                                     <div className="col-7 mt-2">
                                                                         <label className="form-label">Bairro</label>
-                                                                        <select value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
+                                                                        <select required value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
                                                                             <option>Selecione....</option>
                                                                             {this.state.bairro && this.state.bairro.map(x => {
                                                                                 return <option key={x.id} value={x.id}>{x.nome}</option>
@@ -403,11 +470,11 @@ export default class GerenciarFuncionarios extends Component{
                                                                     </div>
                                                                     <div className="col-6 mt-2">
                                                                         <label className="form-label">Cidade</label>
-                                                                        <input value={this.state.funcCidadeChange} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
+                                                                        <input required value={this.state.cidade} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
                                                                     </div>
                                                                     <div className="col-5 mt-2">
                                                                         <label className="form-label">UF</label>
-                                                                        <select onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
+                                                                        <select required onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
                                                                             <option>Selecione....</option>
                                                                             {this.state.uf && this.state.uf.map(opcao => {
                                                                                 return <option key={opcao} value={opcao}>{opcao}</option>
@@ -416,7 +483,7 @@ export default class GerenciarFuncionarios extends Component{
                                                                     </div>
                                                                     <div className="col-5 mt-2">
                                                                         <label className="form-label">Cep</label>
-                                                                        <input value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
+                                                                        <input required value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
                                                                     </div>
                                                                     <hr></hr>
                                                                     <div className="btn-group">
