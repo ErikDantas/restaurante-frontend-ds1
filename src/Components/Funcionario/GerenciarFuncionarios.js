@@ -2,7 +2,6 @@ import { Component } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import './FuncionarioCSS.css'
 
-
 export default class GerenciarFuncionarios extends Component{
 
     state = {
@@ -27,7 +26,18 @@ export default class GerenciarFuncionarios extends Component{
         valorFrete: "",
         funcionarios: [],
         idendereco: 0,
-        funcionarioselecionado: ""
+        funcionarioselecionado: "",
+        ddd:"",
+        telefone: "",
+        telefones:[]
+    }
+
+    getTelefones = (x) => {
+        const url = window.servidor + '/funcionario/telefones/'+x.matricula
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => this.setState({telefones: data}))
     }
 
     gerenteIsNull = (x) => {
@@ -47,6 +57,13 @@ export default class GerenciarFuncionarios extends Component{
             return <div>{(x.endereco.logradouro)+" / Nº "+(x.endereco.numero)}</div>
         }
         
+    }
+
+    funcTelefoneChange = (event) => {
+        this.setState({telefone: event.target.value})
+    }
+    funcDddChange = (event) => {
+        this.setState({ddd: event.target.value})
     }
 
     funcLogradouroChange = (event) => {
@@ -105,6 +122,7 @@ export default class GerenciarFuncionarios extends Component{
             .then(response => response.json())
             .then((data) => {
                 this.setState({funcionarios: data}
+                    
             
             )})
             
@@ -411,25 +429,25 @@ export default class GerenciarFuncionarios extends Component{
                                                 <div className="p-1">
                                                     <button onClick={() => this.setState({funcionarioselecionado: funcionario}) } data-bs-toggle="modal" data-bs-target="#excluirfunc" className="btn btn-sm btn-danger"><i className="bi bi-trash"></i> Deletar</button>
                                                     {/* MODAL PARA EXCLUIR FUNCIONÁRIO*/}
-                                                    <div class="modal fade" id="excluirfunc" tabIndex="-1" aria-labelledby="excluirfuncLabel" aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="excluirfuncLabel">Excluir - {this.state.funcionarioselecionado.nome}</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <div className="modal fade" id="excluirfunc" tabIndex="-1" aria-labelledby="excluirfuncLabel" aria-hidden="true">
+                                                        <div className="modal-dialog">
+                                                            <div className="modal-content">
+                                                                <div className="modal-header">
+                                                                    <h5 className="modal-title" id="excluirfuncLabel">Excluir - {this.state.funcionarioselecionado.nome}</h5>
+                                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
-                                                                <div class="modal-body">
-                                                                    Deseja realmente excluir o funcionário abaixo?<p>
-                                                                        Matricula: {this.state.funcionarioselecionado.matricula}<p>
-                                                                            Nome: {this.state.funcionarioselecionado.nome}<p>
-                                                                                Cargo: {this.state.funcionarioselecionado.cargo}
-                                                                            </p>
-                                                                        </p>
-                                                                    </p>
+                                                                <div className="modal-body">
+                                                                    Deseja realmente excluir o funcionário abaixo?
+                                                                    <p>Matricula: {this.state.funcionarioselecionado.matricula}</p>
+                                                                            <p>Nome: {this.state.funcionarioselecionado.nome}</p>
+                                                                                <p>Cargo: {this.state.funcionarioselecionado.cargo}</p>
+                                                                            
+                                                                        
+                                                                    
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                    <button onClick={() => this.deletarFuncionario(this.state.funcionarioselecionado)} data-bs-dismiss="modal" type="button" class="btn btn-primary">Save changes</button>
+                                                                <div className="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button onClick={() => this.deletarFuncionario(this.state.funcionarioselecionado)} data-bs-dismiss="modal" type="button" className="btn btn-primary">Save changes</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -497,10 +515,74 @@ export default class GerenciarFuncionarios extends Component{
                                                     </div>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button className="btn btn-sm btn-warning"><i className="bi bi-phone"></i> Telefone</button>
+                                                    <button onClick={() => this.getTelefones(funcionario)} data-bs-toggle="modal" data-bs-target="#telefonesModal" className="btn btn-sm btn-warning"><i className="bi bi-phone"></i> Telefone</button>
+                                                    {/* MODAL PARA INSERIR UM NOVO telefones */}
+                                                    <div>
+                                                        <div className="modal fade"  id="telefonesModal" aria-labelledby="telefonesModalLabel" aria-hidden="true">
+                                                            <div className="modal-dialog modal-lg">
+                                                                <div className="modal-content">
+                                                                <div className="modal-header">
+                                                                    <h5 className="modal-title" id="telefonesModalLabel">Incluir novo Telefone <i className="bi bi-phone"></i> </h5>
+                                                                    <button  type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div className="modal-body">
+                                                                    {/* FORMULARIO DO MODAL PARA INSERIR telefones */}
+                                                                    <form className="form-group textoright">
+                                                                    
+                                                                        <div className="row g-3">
+                                                                            <div className="col-2">
+                                                                                <input value={this.state.ddd} onChange={this.funcDddChange} maxLength="2" type="text" className="form-control" placeholder="DDD" aria-label="DDD"/>
+                                                                            </div>
+                                                                            <div className="col-6">
+                                                                                <input value={this.state.telefone} onChange={this.funcTelefoneChange} maxLength="9" type="text" className="form-control" placeholder="Telefone" aria-label="Telefone"/>
+                                                                            </div>
+                                                                            <div className="col">
+                                                                                <button onClick={() => this.funcAddTelefone()}  type="button" className="btn btn-primary"><i className="bi bi-telephone-plus"></i> Incluir</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                    <hr></hr>
+                                                                    <h5 className="text-center">Telefones Cadastrados</h5>
+                                                                    <table className="table table-hover table-responsive table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th scope="col">Id</th>
+                                                                                <th scope="col">DDD</th>
+                                                                                <th scope="col">Número</th>
+                                                                                <th scope="col"></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {this.state.telefones && this.state.telefones.map(tel=> {
+                                                                                return <tr key={tel.id}>
+                                                                                    <th scope="row">{tel.id}</th>
+                                                                                    <td>0{tel.ddd}</td>
+                                                                                    <td>{tel.numero}</td>
+                                                                                    <td>
+                                                                                        <div className="btn-group">
+                                                                                            <div className="p-1">
+                                                                                                <button className="btn btn-danger"><i className="bi bi-pencil-square"></i></button>
+                                                                                            </div>
+                                                                                            <div className="p-1">
+                                                                                                <button className="btn btn-secondary"><i className="bi bi-trash"></i></button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            })}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div className="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            
+                                            </div> 
                                         </td>
                                     </tr>
                                 })}
