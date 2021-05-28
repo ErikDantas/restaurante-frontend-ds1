@@ -82,8 +82,10 @@ export default class ClienteLoginCadastro extends Component{
                     let nomeUsuario = this.state.clienteLogin.nome;
                     if(this.state.clienteLogin.nome==='null'){
                         localStorage.setItem('NomeLogin','null')
+                        localStorage.setItem('IdUsuarioLogado','null')
                     }else{
                         localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        localStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.matricula)
                         toast.success('Benvindo '+ nomeUsuario)
                         localStorage.setItem('TipoDeLogin','funcionario')
                         this.setState({redirecionar: true})
@@ -103,8 +105,10 @@ export default class ClienteLoginCadastro extends Component{
                     let nomeUsuario = this.state.clienteLogin.nome;
                     if(this.state.clienteLogin.nome==='null'){
                         localStorage.setItem('NomeLogin','null')
+                        localStorage.setItem('IdUsuarioLogado','null')
                     }else{
                         localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        localStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.id)
                         localStorage.setItem('TipoDeLogin','cliente')
                         this.setState({redirecionar: true})
                         toast.success('Benvindo '+ nomeUsuario)

@@ -192,7 +192,7 @@ export default class GerenciarFuncionarios extends Component{
     }
 
     deletarFuncionario = (x) => {
-        const url = window.servidor + '/funcionario/'+x.matricula
+        const url = window.servidor + '/funcionario/excluir/'+x.matricula
 
         const requestOptions = {
             method: 'POST',
@@ -325,6 +325,13 @@ export default class GerenciarFuncionarios extends Component{
             this.setState({cep: f.endereco.cep})
 
         }
+    }
+
+
+
+
+    funcAddTelefone = () => {
+        
     }
 
     render(){

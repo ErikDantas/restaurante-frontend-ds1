@@ -55,7 +55,7 @@ export default class GerenciarClientes extends Component{
             }
         };
 
-        const url = window.servidor + '/cliente/' + cliente.id
+        const url = window.servidor + '/cliente/excluir/' + cliente.id
         console.info(url)
         fetch(url, requestOptions)
             .then(this.getAllClientes())

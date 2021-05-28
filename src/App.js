@@ -12,6 +12,7 @@ import Reserva from './Components/Reserva/Reserva';
 import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
 import GerenciarFuncionarios from './Components/Funcionario/GerenciarFuncionarios';
 import GerenciarClientes from './Components/Cliente/GerenciarClientes';
+import Bairros from './Components/Funcionario/GerenciarBairros';
 
 export default class App extends Component{
 
@@ -49,6 +50,9 @@ export default class App extends Component{
             </Route>
             <Route path="/Clientes/GerenciarClientes">
               <GerenciarClientes/>
+            </Route>
+            <Route exact path="/Bairros">
+              <Bairros/>
             </Route>
             </Switch>
           <Footer/>

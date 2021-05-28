@@ -7,6 +7,7 @@ export default class Menu extends Component{
 
     funcLogoff = () => {
         localStorage.setItem('NomeLogin','null')
+        localStorage.setItem('IdUsuarioLogado','null')
     }
 
     componentDidMount(){
@@ -57,6 +58,7 @@ export default class Menu extends Component{
                             <li><a className="dropdown-item" href="/Clientes/GerenciarClientes">Gerenciar Clientes</a></li>
                             <li><a className="dropdown-item" href="/gerenciarcardapio">Gerenciar Cardápio</a></li>
                             <li><a className="dropdown-item" href="/mesa">Gerenciar Mesas</a></li>
+                            <li><a className="dropdown-item" href="/bairros">Gerenciar Bairros</a></li>
                             <li><hr className="dropdown-divider"/></li>
                             <li><a className="dropdown-item" onClick={this.funcLogoff} href="/ClienteLoginCadastro">Logout</a></li>
                         </ul>
@@ -104,11 +106,15 @@ export default class Menu extends Component{
         let tipologin = localStorage.getItem('TipoDeLogin')
         if(logado==='null'){
             divRetornar = this.renderUsuarioNaoLogado()
+            localStorage.setItem('TipoUsuarioLogado','nenhum')
         }else{
             if(tipologin ==='cliente'){
                 divRetornar = this.renderUsuarioLogadoClient()
+                localStorage.setItem('TipoUsuarioLogado','cliente')
+
             }else{
                 divRetornar = this.renderUsuarioLogadoFunc()
+                localStorage.setItem('TipoUsuarioLogado','funcionario')
             }
         }
 
