@@ -5,9 +5,11 @@
 
 .fontetexto{
     font-size: 12pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: normal;
 }
 
 
-.bg-primary{
-    background-color: rgb(64, 73, 109);
+.bg-ds1-primary{
+    background-color: rgb(50, 65, 124);
 }

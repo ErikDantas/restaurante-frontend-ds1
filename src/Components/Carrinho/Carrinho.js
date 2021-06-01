@@ -1,11 +1,23 @@
 import { Component } from "react";
+import './CarrinhoCSS.css'
 
 
 
 export default class Carrinho extends Component{
     state = {
         auxqtdecarrinho: "",
-        itensdocarrinho: []
+        itensdocarrinho: [],
+        valortotalcarrinho: 0,
+        totalitenspedidos: 0,
+        frete: "",
+        usuario: ""
+    }
+
+    funcAcumularQuantidadeItens = (x) => {
+
+        return <div>
+                    <button onClick={()=>this.removerDoCarrinho(x[0])} className="btn"><i className="bi bi-bag-dash p-2"></i></button>{x[4]}<button onClick={() => this.adicionarAoCarrinho(x[0])} className="btn"><i className="bi bi-bag-plus p-2"></i></button>
+            </div>
     }
 
     limparCarrinho = () => {
@@ -20,27 +32,109 @@ export default class Carrinho extends Component{
     }
 
 
+
     getCarrinho = () => {
         const url = window.servidor + '/item/carrinho'
         fetch(url)
         .then(response => response.json())
         .then((data) => {
             this.setState({itensdocarrinho: data})
-            console.log(this.state.itensdocarrinho)
         })
     }
 
-    componentDidMount(){
-        this.getCarrinho()
+
+    getValorTotal = () => {
+
+        const urlvalortotal = window.servidor + '/item/carrinho/valortotal'
+
+        fetch(urlvalortotal)
+        .then(response => response.json())
+        .then(data => this.setState({valortotalcarrinho: data}))
     }
 
 
+    
+
+    componentDidMount(){
+        this.getCarrinho()
+        this.getValorTotal()
+        this.funcTotalItensCarrinho()
+        this.funcGetValorFrete()
+    }
+
+
+    funcTotalItensCarrinho = () => {
+        const url = window.servidor+'/item/carrinho/totalitens'
+        fetch(url)
+            .then(response => response.json())
+            .then(data => this.setState({totalitenspedidos: data}))
+    }
+
+
+    adicionarAoCarrinho = (e) => {
+
+        const url = window.servidor + '/item/carrinho/add/'+e
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({qtdecarrinho: data})
+                sessionStorage.setItem('qtdecarrinho',this.state.qtdecarrinho)
+                window.location.reload()
+            })
+            
+
+    }
+    removerDoCarrinho = (e) => {
+
+        const url = window.servidor + '/item/carrinho/remover/'+e
+        fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({qtdecarrinho: data})
+                sessionStorage.setItem('qtdecarrinho',this.state.qtdecarrinho)
+                window.location.reload()
+            })
+    }
+
+
+    funcGetValorFrete = () => {
+        if(localStorage.getItem('TipoUsuarioLogado')==='cliente'){
+            const idcliente = localStorage.getItem('IdUsuarioLogado')
+            const url = window.servidor+'/cliente/'+idcliente
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => this.setState({usuario: data}))
+        }else if(localStorage.getItem('TipoUsuarioLogado')==='funcionario'){
+            const matriculafuncionario = localStorage.getItem('IdUsuarioLogado')
+            const url = window.servidor+'/funcionario/'+matriculafuncionario
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => this.setState({usuario: data}))
+        }
+    }
+
+    funcValorFreteIsNull = (x) => {
+        if(x===null){
+            return <div>Bairro não cadastrado.</div>
+        }else{
+            return <div>Frete: {(x).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</div>
+        }
+    }
+
+    funcTotalComFrete = (x) => {
+        if(x===null){
+            return <div>Favor cadastrar o bairro.</div>
+        }else{
+            return <div>Total: {(this.state.valortotalcarrinho).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</div>
+        }
+    }
 
     render(){
 
         return(
             <div className="mt-5">
-                <button onClick={() => this.limparCarrinho()} className="btn btn-primary mt-5">Limpar Carrinho</button>
                 <div>
                     <h2 className="p-3 text-center">Carrinho</h2>
                 </div>
@@ -66,7 +160,7 @@ export default class Carrinho extends Component{
                                         <td>{item[1]}</td>
                                         <td>{item[2]}</td>
                                         <td>{parseFloat(item[3]).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
-                                        <td><button className="btn"><i className="bi bi-bag-dash p-2"></i></button>{item[4]}<button className="btn"><i className="bi bi-bag-plus p-2"></i></button></td>
+                                        <td>{this.funcAcumularQuantidadeItens(item)}</td>
                                         <td>{(item[3]*item[4]).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
                                     </tr>
                                 })}
@@ -81,15 +175,30 @@ export default class Carrinho extends Component{
                             </div>
                             <ul className="list-group list-group-flush">
                                 <li className="list-group-item">
-                                    Quantidade de Itens pedidos
-                                    <p>Valor do Frete</p>
+                                    {/* TOTAL + QUANTIDADE DE PRODUTOS*/}
+                                    {this.state.totalitenspedidos} produtos x  {" "+(this.state.valortotalcarrinho).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
+                                     {/*FRETE TOTAL */}
+                                    {this.funcValorFreteIsNull(this.state.frete)}
                                 </li>
                                 <li className="list-group-item">
-                                    <h4>Valor Total: </h4>
+                                    {/*VALOR TOTAL */}
+                                    <h6 className="textoright">{this.funcTotalComFrete(this.state.frete)}</h6>
                                 </li>
                             </ul>
+                            <div className="btn-group">
+                                <div className="p-1">
+                                    <button className="btn btn-primary p-2">Confirmar Pedido</button>
+                                </div>
+                                <div className="p-1">
+                                    <button onClick={() => this.limparCarrinho()} className="btn btn-warning p-2">Limpar Carrinho</button>
+                                </div>
+                            </div>
+                            
+
                         </div>
+                        
                     </div>
+
                 </div>
             </div>
         )

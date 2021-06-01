@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 //import {cpf} from 'cpf-cnpj-validator';
@@ -18,7 +18,8 @@ export default class ClienteLoginCadastro extends Component{
         senha2: "",
         telefone: "",
         clienteLogin: "",
-        TipoLogin: ""
+        TipoLogin: "",
+        redirecionar: false
     }
 
 
@@ -81,14 +82,17 @@ export default class ClienteLoginCadastro extends Component{
                     let nomeUsuario = this.state.clienteLogin.nome;
                     if(this.state.clienteLogin.nome==='null'){
                         localStorage.setItem('NomeLogin','null')
+                        localStorage.setItem('IdUsuarioLogado','null')
                     }else{
                         localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        localStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.matricula)
                         toast.success('Benvindo '+ nomeUsuario)
                         localStorage.setItem('TipoDeLogin','funcionario')
-
+                        this.setState({redirecionar: true})
+                        window.location.reload()
 
                     }
-                    window.location.reload()
+                    
                 })
         }else{
             
@@ -101,15 +105,16 @@ export default class ClienteLoginCadastro extends Component{
                     let nomeUsuario = this.state.clienteLogin.nome;
                     if(this.state.clienteLogin.nome==='null'){
                         localStorage.setItem('NomeLogin','null')
+                        localStorage.setItem('IdUsuarioLogado','null')
                     }else{
                         localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        localStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.id)
                         localStorage.setItem('TipoDeLogin','cliente')
-
+                        this.setState({redirecionar: true})
                         toast.success('Benvindo '+ nomeUsuario)
+                        window.location.reload()
 
-                    }
-                    
-                    window.location.reload()
+                    }          
                 })
         }      
     }
@@ -153,9 +158,8 @@ export default class ClienteLoginCadastro extends Component{
         
     }
 
-
-    render(){
-        return(
+    renderTelaDeLogin = () => {
+        return (
             <div className="mt-5 p-3 row">
                 <div className="col-4 mt-2 container-fluid">
                     <div className="accordion" id="accordionLogin">
@@ -245,6 +249,26 @@ export default class ClienteLoginCadastro extends Component{
                     </div>
                 </div>
             </div>
+        )
+    }
+
+
+    renderRedirecionar = () => {
+        return (
+            <Redirect to="/"></Redirect>
+        )
+    }
+
+
+    render(){
+        let tela = ''
+        if(this.state.redirecionar){
+            tela=this.renderRedirecionar()
+        }else{
+            tela=this.renderTelaDeLogin()
+        }
+        return(
+            tela
         )
     }
 }
