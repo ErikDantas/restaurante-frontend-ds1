@@ -27,18 +27,11 @@ export default class GerenciarFuncionarios extends Component{
         funcionarios: [],
         idendereco: 0,
         funcionarioselecionado: "",
-        ddd:"",
-        telefone: "",
-        telefones:[]
+        rendereditar: 0,
+        telarender: "1",
+        telefone: ""
     }
 
-    getTelefones = (x) => {
-        const url = window.servidor + '/funcionario/telefones/'+x.matricula
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => this.setState({telefones: data}))
-    }
 
     gerenteIsNull = (x) => {
         if(x.gerente===null){
@@ -59,13 +52,6 @@ export default class GerenciarFuncionarios extends Component{
         
     }
 
-    funcTelefoneChange = (event) => {
-        this.setState({telefone: event.target.value})
-    }
-    funcDddChange = (event) => {
-        this.setState({ddd: event.target.value})
-    }
-
     funcLogradouroChange = (event) => {
         this.setState({logradouro: event.target.value})
     }
@@ -74,6 +60,9 @@ export default class GerenciarFuncionarios extends Component{
     }
     funcComplementoChange = (event) => {
         this.setState({complemento: event.target.value})
+    }
+    funcTelefoneChange = (event) => {
+        this.setState({telefone: event.target.value})
     }
 
     funcBairroChange = (event) => {
@@ -163,7 +152,8 @@ export default class GerenciarFuncionarios extends Component{
             senha: this.state.senha,
             gerente: this.state.gerente,
             cpf: this.state.cpf,
-            email: this.state.email
+            email: this.state.email,
+            telefone: this.state.telefone
         };
 
 
@@ -183,6 +173,7 @@ export default class GerenciarFuncionarios extends Component{
                 if(response.status===200){
                     this.preencherTabelaFuncionarios()
                     toast.success("Adicionado com sucesso.")
+                    this.setState({telarender: '1'})
                 }
             })
         }else{
@@ -272,6 +263,8 @@ export default class GerenciarFuncionarios extends Component{
             fetch(url,requestOptions)
                 .then((response) => {
                     console.log(response.status)
+                    this.setState({telarender: '1'})
+                    this.preencherTabelaFuncionarios()
                 })
         }
     }
@@ -287,7 +280,9 @@ export default class GerenciarFuncionarios extends Component{
             endereco: {
                 id: this.state.idendereco
             },
-            email: this.state.funcionarioselecionado.email
+            email: this.state.funcionarioselecionado.email,
+            telefone: this.state.funcionarioselecionado.telefone
+
         }
         const rOptions = {
             method: 'PUT',
@@ -304,6 +299,8 @@ export default class GerenciarFuncionarios extends Component{
                 console.log(response.status)
                 if(response.status===200){
                     toast.success("Endereço atualizado.")
+                    this.setState({telarender: '1'})
+                    this.preencherTabelaFuncionarios()
                 }else{
                     toast.error("Falha ao atualizar endereço.")
                 }
@@ -311,8 +308,9 @@ export default class GerenciarFuncionarios extends Component{
     }
 
 
-    editarEndereco = (f) => {
+    funcAlterarRenderEndereco = (f) => {
         this.setState({funcionarioselecionado: f})
+        this.setState({telarender: 3})
         if(f.endereco === null){
 
         }else{
@@ -328,78 +326,115 @@ export default class GerenciarFuncionarios extends Component{
     }
 
 
+    funcEditarFuncionarioRender = (f) => {
+        this.setState({funcionarioselecionado: f})
+        this.setState({telarender: 2})
+        this.setState({rendereditar: 0})
+        if(f===null){
 
-
-    funcAddTelefone = () => {
+        }else{
+            this.setState({nome: f.nome})
+            this.setState({cargo: f.cargo})
+            this.setState({login: f.login})
+            this.setState({senha: f.senha})
+            this.setState({cpf: f.cpf})
+            this.setState({email: f.email})
+            this.setState({gerente: f.gerente})
+            this.setState({telefone: f.telefone})
+        }
         
     }
 
-    render(){
+    funcAtualizarFuncionario = () => {
+        if(this.state.funcionarioselecionado.endereco===null){
+            const aux ={
+                nome: this.state.nome,
+                cargo: this.state.cargo,
+                login: this.state.login,
+                senha: this.state.senha,
+                gerente: this.state.gerente,
+                cpf: this.state.cpf,
+                telefone: this.state.telefone,
+                email: this.state.email
+            }
+            const rOptions = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(aux)
+            };
+            const url = window.servidor + '/funcionario/alterar/'+this.state.funcionarioselecionado.matricula
+            fetch(url,rOptions)
+                .then((response) => {
+                    response.json()
+                    if(response.status===200){
+                        toast.success("Alterado com sucesso. Código= "+response.status)
+                        this.setState({telarender: '1'})
+                        this.preencherTabelaFuncionarios()
+                    }else{
+                        toast.error("Falha ao alterar.")
+                    }
+                })
+        }else{
+            const aux ={
+                nome: this.state.nome,
+                cargo: this.state.cargo,
+                login: this.state.login,
+                senha: this.state.senha,
+                gerente: this.state.gerente,
+                cpf: this.state.cpf,
+                endereco: {
+                    id: this.state.funcionarioselecionado.endereco.id
+                },
+                telefone: this.state.telefone,
+                email: this.state.email
+            }
+            const rOptions = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(aux)
+            };
+            const url = window.servidor + '/funcionario/alterar/'+this.state.funcionarioselecionado.matricula
+            fetch(url,rOptions)
+                .then((response) => {
+                    response.json()
+                    if(response.status===200){
+                        toast.success("Alterado com sucesso. Código= "+response.status)
+                        this.setState({telarender: '1'})
+                        this.preencherTabelaFuncionarios()
+                    }else{
+                        toast.error("Falha ao alterar.")
+                    }
+                })
+        }
+        
+       
+    }
+
+
+
+    funcEscolherEditarSalvar = (f) => {
+        if(this.state.rendereditar===0){
+            this.funcAtualizarFuncionario(f)
+        }else{
+            this.gravarNovoFuncionario();
+        }
+    }
+
+    renderTabelaFuncionarios = () => {
         return(
-            <div className="row mt-5 mb-5 ">
-                <ToastContainer/>
+            <div className="mt-5 row mb-5">
                 <div>
-                    <h2 className="p-3 text-center mt-4">Gerenciar Funcionários</h2>
+                    <h5 className="mt-5 text-center">Funcionarios Cadastrados</h5>
                 </div>
                 <div>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" className="btn btn-primary"><i className="bi bi-person-plus"></i> Adicionar Funcionário</button>
-                    {/* MODAL PARA INSERIR UM NOVO ITEM */}
-                    <div>
-                        <div className="modal fade"  id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel">Incluir novo Funcionário <i className="bi bi-person-plus"></i> </h5>
-                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div className="modal-body">
-                                    {/* FORMULARIO DO MODAL PARA INSERIR UM NOVO ITEM */}
-                                    <form className="form-group textoright">
-                                        <div className="col-10">
-                                            <label className="form-label">Nome</label>
-                                            <input value={this.state.nome} onChange={this.funcNomeChange} maxLength='50' type="text" className="form-control" autoFocus></input>
-                                        </div>
-                                        <div className="col-6 mt-2">
-                                            <label className="form-label">Cargo</label>
-                                            <input value={this.state.cargo} onChange={this.funcCargoChange} maxLength='30' type="text" className="form-control" ></input>
-                                        </div>
-                                        <div className="col-3 mt-2">
-                                            <label className="form-label">Login</label>
-                                            <input value={this.state.login} onChange={this.funcLoginChange} maxLength='10' type="text" className="form-control" ></input>
-                                        </div>
-                                        <div className="col-5 mt-2">
-                                            <label className="form-label">Senha</label>
-                                            <input required minLength="4" value={this.state.senha} onChange={this.funcSenhaChange} maxLength='20' type="password" className="form-control" ></input>
-                                            <small id="emailHelp" className="form-text text-muted">Mínimo de 4 digitos</small>
-                                        </div>
-                                        <div className="col-4 mt-2">
-                                            <label className="form-label">CPF</label>
-                                            <input minLength="11" maxLength="11" value={this.state.cpf} onChange={this.funcCpfChange} type="text" className="form-control" />
-                                        </div>
-                                        <div className="col-8 mt-2">
-                                            <label className="form-label">Email</label>
-                                            <input maxLength='40' value={this.state.email} onChange={this.funcEmailChange} type="text" className="form-control" ></input>
-                                        </div>
-                                        <div className="form-check col-5 mt-2">
-                                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                Gerente?
-                                            </label>
-                                            <input className="form-check-input" type="checkbox" onChange={this.funcGerenteChange} value="" id="flexCheckDefault"/>
-                                            
-                                        </div>
-                                    </form>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="button" onClick={() => this.gravarNovoFuncionario()} className="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button type="button" onClick={() => this.setState({telarender: 2, rendereditar: 1})} className="btn btn-primary"><i className="bi bi-person-plus"></i> Adicionar Funcionário</button>
                 </div>
-                <div className="col-12 container">
-                    <div className="mt-3">
+                <div className="mt-3 col-12">
+                    <div className="mt-5">
                         <table className="table table-hover table-responsive table-striped">
                             <thead>
                                 <tr>
@@ -412,6 +447,7 @@ export default class GerenciarFuncionarios extends Component{
                                     <th scope="col">CPF</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Endereço</th>
+                                    <th scope="col">Telefone</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -427,11 +463,11 @@ export default class GerenciarFuncionarios extends Component{
                                         <td>{funcionario.cpf}</td>
                                         <td>{funcionario.email}</td>
                                         <td>{this.enderecoNull(funcionario)}</td>
-
+                                        <td>{funcionario.telefone}</td>
                                         <td className="text-center">
                                             <div className="btn-group"> 
                                                 <div className="p-1">
-                                                    <button className="btn btn-sm btn-info"><i className="bi bi-pencil-square"></i> Editar</button>
+                                                    <button onClick={() => this.funcEditarFuncionarioRender(funcionario)} className="btn btn-sm btn-info"><i className="bi bi-pencil-square"></i> Editar</button>
                                                 </div>
                                                 <div className="p-1">
                                                     <button onClick={() => this.setState({funcionarioselecionado: funcionario}) } data-bs-toggle="modal" data-bs-target="#excluirfunc" className="btn btn-sm btn-danger"><i className="bi bi-trash"></i> Deletar</button>
@@ -448,9 +484,6 @@ export default class GerenciarFuncionarios extends Component{
                                                                     <p>Matricula: {this.state.funcionarioselecionado.matricula}</p>
                                                                             <p>Nome: {this.state.funcionarioselecionado.nome}</p>
                                                                                 <p>Cargo: {this.state.funcionarioselecionado.cargo}</p>
-                                                                            
-                                                                        
-                                                                    
                                                                 </div>
                                                                 <div className="modal-footer">
                                                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -461,133 +494,7 @@ export default class GerenciarFuncionarios extends Component{
                                                     </div>
                                                 </div>
                                                 <div className="p-1">
-                                                    <button onClick={() => this.editarEndereco(funcionario)} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
-                                                    <div>
-                                                        <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                                                            <div className="offcanvas-header">
-                                                                <h5 id="offcanvasRightLabel">Endereço do {this.state.funcionarioselecionado.nome}</h5>
-                                                                <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                                            </div>
-                                                            <hr></hr>
-
-                                                            <div className="offcanvas-body textleft">
-                                                                <form className="form-group">
-                                                                    <div className="col-10">
-                                                                        <label className="form-label">Logradouro</label>
-                                                                        <input disabled={this.state.btndisable} value={this.state.logradouro} onChange={this.funcLogradouroChange} type="text" className="form-control" autoFocus></input>
-                                                                    </div>
-                                                                    <div className="col-5 mt-2">
-                                                                        <label className="form-label">Número</label>
-                                                                        <input value={this.state.numero} onChange={this.funcNumeroChange} type="number" className="form-control" ></input>
-                                                                    </div>
-                                                                    <div className="col-12 mt-2">
-                                                                        <label className="form-label">Complemento</label>
-                                                                        <input required value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
-                                                                    </div>
-                                                                    <div className="col-7 mt-2">
-                                                                        <label className="form-label">Bairro</label>
-                                                                        <select required value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
-                                                                            <option>Selecione....</option>
-                                                                            {this.state.bairro && this.state.bairro.map(x => {
-                                                                                return <option key={x.id} value={x.id}>{x.nome}</option>
-                                                                            })}
-                                                                        </select>
-                                                                    </div>
-                                                                    <div className="col-6 mt-2">
-                                                                        <label className="form-label">Cidade</label>
-                                                                        <input required value={this.state.cidade} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
-                                                                    </div>
-                                                                    <div className="col-5 mt-2">
-                                                                        <label className="form-label">UF</label>
-                                                                        <select required onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
-                                                                            <option>Selecione....</option>
-                                                                            {this.state.uf && this.state.uf.map(opcao => {
-                                                                                return <option key={opcao} value={opcao}>{opcao}</option>
-                                                                            })}
-                                                                        </select>
-                                                                    </div>
-                                                                    <div className="col-5 mt-2">
-                                                                        <label className="form-label">Cep</label>
-                                                                        <input required value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
-                                                                    </div>
-                                                                    <hr></hr>
-                                                                    <div className="btn-group">
-                                                                        <div className="p-1">
-                                                                            <button onClick={() => this.atualizarEndereco()} className="btn btn-success">Salvar</button>
-                                                                        </div> 
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="p-1">
-                                                    <button onClick={() => this.getTelefones(funcionario)} data-bs-toggle="modal" data-bs-target="#telefonesModal" className="btn btn-sm btn-warning"><i className="bi bi-phone"></i> Telefone</button>
-                                                    {/* MODAL PARA INSERIR UM NOVO telefones */}
-                                                    <div>
-                                                        <div className="modal fade"  id="telefonesModal" aria-labelledby="telefonesModalLabel" aria-hidden="true">
-                                                            <div className="modal-dialog modal-lg">
-                                                                <div className="modal-content">
-                                                                <div className="modal-header">
-                                                                    <h5 className="modal-title" id="telefonesModalLabel">Incluir novo Telefone <i className="bi bi-phone"></i> </h5>
-                                                                    <button  type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div className="modal-body">
-                                                                    {/* FORMULARIO DO MODAL PARA INSERIR telefones */}
-                                                                    <form className="form-group textoright">
-                                                                    
-                                                                        <div className="row g-3">
-                                                                            <div className="col-2">
-                                                                                <input value={this.state.ddd} onChange={this.funcDddChange} maxLength="2" type="text" className="form-control" placeholder="DDD" aria-label="DDD"/>
-                                                                            </div>
-                                                                            <div className="col-6">
-                                                                                <input value={this.state.telefone} onChange={this.funcTelefoneChange} maxLength="9" type="text" className="form-control" placeholder="Telefone" aria-label="Telefone"/>
-                                                                            </div>
-                                                                            <div className="col">
-                                                                                <button onClick={() => this.funcAddTelefone()}  type="button" className="btn btn-primary"><i className="bi bi-telephone-plus"></i> Incluir</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                    <hr></hr>
-                                                                    <h5 className="text-center">Telefones Cadastrados</h5>
-                                                                    <table className="table table-hover table-responsive table-striped">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th scope="col">Id</th>
-                                                                                <th scope="col">DDD</th>
-                                                                                <th scope="col">Número</th>
-                                                                                <th scope="col"></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                        {this.state.telefones && this.state.telefones.map(tel=> {
-                                                                                return <tr key={tel.id}>
-                                                                                    <th scope="row">{tel.id}</th>
-                                                                                    <td>0{tel.ddd}</td>
-                                                                                    <td>{tel.numero}</td>
-                                                                                    <td>
-                                                                                        <div className="btn-group">
-                                                                                            <div className="p-1">
-                                                                                                <button className="btn btn-danger"><i className="bi bi-pencil-square"></i></button>
-                                                                                            </div>
-                                                                                            <div className="p-1">
-                                                                                                <button className="btn btn-secondary"><i className="bi bi-trash"></i></button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            })}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                                <div className="modal-footer">
-                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
-                                                                </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <button onClick={() => this.funcAlterarRenderEndereco(funcionario)} className="btn btn-sm bg-silver"><i className="bi bi-geo-alt"></i> Endereço</button>
                                                 </div>
                                             </div> 
                                         </td>
@@ -598,6 +505,136 @@ export default class GerenciarFuncionarios extends Component{
                     </div>
                 </div>
             </div>
+        )
+    }
+
+
+    renderIncluirNovoFuncionario = () => {
+        return (
+            <div className="row mt-5 mb-5 ">
+                <ToastContainer/>
+                <div>
+                    <h2 className="p-3 text-center mt-4">Gerenciar Funcionários</h2>
+                </div>
+                <div>
+                    <form className="form-group buttonleft">
+                        <div className="col-6">
+                            <label className="form-label buttonleft">Nome</label>
+                            <input value={this.state.nome} onChange={this.funcNomeChange} maxLength='50' type="text" className="form-control" autoFocus></input>
+                        </div>
+                        <div className="col-3 mt-2">
+                            <label className="form-label buttonleft">Cargo</label>
+                            <input value={this.state.cargo} onChange={this.funcCargoChange} maxLength='30' type="text" className="form-control" ></input>
+                        </div>
+                        <div className="col-2 mt-2">
+                            <label className="form-label">Login</label>
+                            <input value={this.state.login} onChange={this.funcLoginChange} maxLength='10' type="text" className="form-control" ></input>
+                        </div>
+                        <div className="col-3 mt-2">
+                            <label className="form-label">Senha</label>
+                            <input required minLength="4" value={this.state.senha} onChange={this.funcSenhaChange} maxLength='20' type="password" className="form-control" ></input>
+                            <small id="emailHelp" className="form-text text-muted">Mínimo de 4 digitos</small>
+                        </div>
+                        <div className="col-2 mt-2">
+                            <label className="form-label">CPF</label>
+                            <input minLength="11" maxLength="11" value={this.state.cpf} onChange={this.funcCpfChange} type="text" className="form-control" />
+                        </div>
+                        <div className="col-5 mt-2">
+                            <label className="form-label">Email</label>
+                            <input maxLength='40' value={this.state.email} onChange={this.funcEmailChange} type="text" className="form-control" ></input>
+                        </div>
+                        <div className="col-2 mt-2">
+                            <label className="form-label">Telefone</label>
+                            <input maxLength='11' value={this.state.telefone} onChange={this.funcTelefoneChange} type="text" className="form-control" ></input>
+                        </div>
+                        <div className="form-check col-5 mt-2">
+                            <label className="form-check-label" htmlFor="flexCheckDefault">
+                                Gerente?
+                            </label>
+                            <input className="form-check-input" type="checkbox" onChange={this.funcGerenteChange} value={this.state.gerente} id="flexCheckDefault"/>
+                            
+                        </div>
+                    </form>
+                </div>
+                <div className="modal-footer">
+                    <button type="button" onClick={() => this.setState({telarender: '1'})} className="btn btn-secondary">Cancelar</button>
+                    <button type="button" onClick={() => this.funcEscolherEditarSalvar()} className="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </div>
+        )
+    }
+
+    renderAtualizarFuncionario = () => {
+        return(
+            <div className="mt-5 mb-5">
+                <div className="p-5">
+                    <h5 className="text-center">Atualizar Endereço</h5>
+                </div>
+                <form className="form-group">
+                    <div className="col-10">
+                        <label className="form-label">Logradouro</label>
+                        <input disabled={this.state.btndisable} value={this.state.logradouro} onChange={this.funcLogradouroChange} type="text" className="form-control" autoFocus></input>
+                    </div>
+                    <div className="col-5 mt-2">
+                        <label className="form-label">Número</label>
+                        <input value={this.state.numero} onChange={this.funcNumeroChange} type="number" className="form-control" ></input>
+                    </div>
+                    <div className="col-12 mt-2">
+                        <label className="form-label">Complemento</label>
+                        <input required value={this.state.complemento} onChange={this.funcComplementoChange} type="text" className="form-control" ></input>
+                    </div>
+                    <div className="col-7 mt-2">
+                        <label className="form-label">Bairro</label>
+                        <select required value={this.state.bairroselecionado} onChange={this.funcBairroChange} className="form-select">
+                            <option>Selecione....</option>
+                            {this.state.bairro && this.state.bairro.map(x => {
+                                return <option key={x.id} value={x.id}>{x.nome}</option>
+                            })}
+                        </select>
+                    </div>
+                    <div className="col-6 mt-2">
+                        <label className="form-label">Cidade</label>
+                        <input required value={this.state.cidade} onChange={this.funcCidadeChange} type="text" className="form-control" ></input>
+                    </div>
+                    <div className="col-5 mt-2">
+                        <label className="form-label">UF</label>
+                        <select required onChange={this.funcUfChange} value={this.state.ufselecionado} className="form-select">
+                            <option>Selecione....</option>
+                            {this.state.uf && this.state.uf.map(opcao => {
+                                return <option key={opcao} value={opcao}>{opcao}</option>
+                            })}
+                        </select>
+                    </div>
+                    <div className="col-5 mt-2">
+                        <label className="form-label">Cep</label>
+                        <input required value={this.state.cep} onChange={this.funcCepChange} type="text" className="form-control" ></input>
+                    </div>
+                    <hr></hr>
+                    
+                </form>
+                <div className="btn-group">
+                        <div className="p-1">
+                            <button onClick={() => this.atualizarEndereco()} className="btn btn-success">Salvar</button>
+                        </div> 
+                        <div className="p-1">
+                            <button onClick={() => this.setState({telarender: '1'})} className="btn btn-secondary">Cancelar</button>
+                        </div> 
+                    </div>
+            </div>
+        )
+    }
+
+    render(){
+        let tela
+        if(this.state.telarender === '1'){
+            tela = this.renderTabelaFuncionarios()
+        }else if(this.state.telarender===2){
+            tela = this.renderIncluirNovoFuncionario()
+        }else{
+            tela = this.renderAtualizarFuncionario()
+        }
+        return(
+            tela
         )
     }
 }
