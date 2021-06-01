@@ -58,9 +58,11 @@ export default class GerenciarFuncionarios extends Component{
     funcNumeroChange = (event) => {
         this.setState({numero: event.target.value})
     }
+
     funcComplementoChange = (event) => {
         this.setState({complemento: event.target.value})
     }
+
     funcTelefoneChange = (event) => {
         this.setState({telefone: event.target.value})
     }
@@ -424,6 +426,20 @@ export default class GerenciarFuncionarios extends Component{
         }
     }
 
+
+    funcLimparInputsNovoFuncionario = () => {
+        this.setState({telarender: 2, rendereditar: 1})
+        this.setState({
+            nome: "",
+            cargo: "",
+            login: "",
+            senha: "",
+            cpf: "",
+            email: "",
+            telefone: ""
+        })
+    }
+
     renderTabelaFuncionarios = () => {
         return(
             <div className="mt-5 row mb-5">
@@ -431,7 +447,7 @@ export default class GerenciarFuncionarios extends Component{
                     <h5 className="mt-5 text-center">Funcionarios Cadastrados</h5>
                 </div>
                 <div>
-                    <button type="button" onClick={() => this.setState({telarender: 2, rendereditar: 1})} className="btn btn-primary"><i className="bi bi-person-plus"></i> Adicionar Funcionário</button>
+                    <button type="button" onClick={() => this.funcLimparInputsNovoFuncionario()} className="btn btn-primary"><i className="bi bi-person-plus"></i> Adicionar Funcionário</button>
                 </div>
                 <div className="mt-3 col-12">
                     <div className="mt-5">
@@ -558,7 +574,7 @@ export default class GerenciarFuncionarios extends Component{
                 </div>
                 <div className="modal-footer">
                     <button type="button" onClick={() => this.setState({telarender: '1'})} className="btn btn-secondary">Cancelar</button>
-                    <button type="button" onClick={() => this.funcEscolherEditarSalvar()} className="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                    <button type="button" onClick={() => this.funcEscolherEditarSalvar()} className="btn btn-primary">Salvar</button>
                 </div>
             </div>
         )
