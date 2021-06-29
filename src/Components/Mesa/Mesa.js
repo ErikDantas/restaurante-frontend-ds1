@@ -270,7 +270,7 @@ iniciarNovo = () => {
 
     render() {
 
-        let pagina = '';
+        let pagina = ''
 
         if(this.state.incluindo){
             pagina = this.renderCadastrarMesa()
