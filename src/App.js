@@ -15,7 +15,6 @@ import GerenciarClientes from './Components/Cliente/GerenciarClientes';
 import Bairros from './Components/Funcionario/GerenciarBairros';
 
 export default class App extends Component{
-
   
   
   render(){

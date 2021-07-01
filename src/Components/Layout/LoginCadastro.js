@@ -81,13 +81,13 @@ export default class ClienteLoginCadastro extends Component{
                 .then(() => {
                     let nomeUsuario = this.state.clienteLogin.nome;
                     if(this.state.clienteLogin.nome==='null'){
-                        localStorage.setItem('NomeLogin','null')
-                        localStorage.setItem('IdUsuarioLogado','null')
+                        sessionStorage.setItem('NomeLogin','null')
+                        sessionStorage.setItem('IdUsuarioLogado','null')
                     }else{
-                        localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
-                        localStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.matricula)
+                        sessionStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        sessionStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.matricula)
                         toast.success('Benvindo '+ nomeUsuario)
-                        localStorage.setItem('TipoDeLogin','funcionario')
+                        sessionStorage.setItem('TipoDeLogin','funcionario')
                         this.setState({redirecionar: true})
                         window.location.reload()
 
@@ -104,12 +104,13 @@ export default class ClienteLoginCadastro extends Component{
                 .then(() => {
                     let nomeUsuario = this.state.clienteLogin.nome;
                     if(this.state.clienteLogin.nome==='null'){
-                        localStorage.setItem('NomeLogin','null')
-                        localStorage.setItem('IdUsuarioLogado','null')
+                        sessionStorage.setItem('NomeLogin','null')
+                        sessionStorage.setItem('IdUsuarioLogado','null')
                     }else{
-                        localStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
-                        localStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.id)
-                        localStorage.setItem('TipoDeLogin','cliente')
+                        sessionStorage.setItem('NomeLogin',this.state.clienteLogin.nome)
+                        sessionStorage.setItem('IdUsuarioLogado',this.state.clienteLogin.id)
+                        console.log(this.state.clienteLogin.id)
+                        sessionStorage.setItem('TipoDeLogin','cliente')
                         this.setState({redirecionar: true})
                         toast.success('Benvindo '+ nomeUsuario)
                         window.location.reload()

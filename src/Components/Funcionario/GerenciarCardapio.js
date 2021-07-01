@@ -26,6 +26,7 @@ export default class GerenciarCardapio extends Component{
     }
 
     preencherTabelaItens = () => {
+        this.funcZerarValoresModal()
         const url = window.servidor + '/item/'
         fetch(url)
             .then(response => response.json())
@@ -57,6 +58,12 @@ export default class GerenciarCardapio extends Component{
     }
 
 
+    funcZerarValoresModal = () => {
+        this.setState({nome: "", tipoItem: "", qtdRefeicao: "", valor: "", tempoPreparo: ""})
+    }
+
+
+
     funcItemSelecionadoChange = (event) => {
         this.setState({itemSelecionado: event.target.value})
     }
@@ -85,6 +92,8 @@ export default class GerenciarCardapio extends Component{
     }
 
     gravarItem = () => {
+        this.funcZerarValoresModal()
+
         const dados = {
             "nome": this.state.nome,
             "tipoItem": this.state.tipoItem,
