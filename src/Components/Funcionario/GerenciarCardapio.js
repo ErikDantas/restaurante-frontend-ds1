@@ -94,14 +94,7 @@ export default class GerenciarCardapio extends Component{
       .then(data => this.setState({tipositens: data}));
   }
 
-  gravarItem = () => {
-    const dados = {
-      "nome": this.state.nome,
-      "tipoItem": this.state.tipoItem,
-      "valor": this.state.valor,
-      "qtdRefeicao": this.state.qtdRefeicao,
-      "tempoPreparo": this.state.tempoPreparo
-    }
+
 
     gravarItem = () => {
         this.funcZerarValoresModal()
