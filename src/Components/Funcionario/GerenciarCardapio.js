@@ -25,13 +25,6 @@ export default class GerenciarCardapio extends Component{
       .then(data => this.setState({itens: data}));
   }
 
-    preencherTabelaItens = () => {
-        this.funcZerarValoresModal()
-        const url = window.servidor + '/item/'
-        fetch(url)
-            .then(response => response.json())
-            .then(data => this.setState({itens: data}));
-    }
   funcApagaItem = (item) => {
 
     const requestOptions = {
@@ -56,21 +49,6 @@ export default class GerenciarCardapio extends Component{
     this.getTipoItem()
   }
 
-    componentDidMount(){
-        this.preencherTabelaItens()
-        this.getTipoItem()
-    }
-
-
-    funcZerarValoresModal = () => {
-        this.setState({nome: "", tipoItem: "", qtdRefeicao: "", valor: "", tempoPreparo: ""})
-    }
-
-
-
-    funcItemSelecionadoChange = (event) => {
-        this.setState({itemSelecionado: event.target.value})
-    }
   funcNomeChange = (event) => {
     this.setState({nome: event.target.value})
   }
@@ -103,16 +81,6 @@ export default class GerenciarCardapio extends Component{
       "tempoPreparo": this.state.tempoPreparo
     }
 
-    gravarItem = () => {
-        this.funcZerarValoresModal()
-
-        const dados = {
-            "nome": this.state.nome,
-            "tipoItem": this.state.tipoItem,
-            "valor": this.state.valor,
-            "qtdRefeicao": this.state.qtdRefeicao,
-            "tempoPreparo": this.state.tempoPreparo
-        }
     const requestOptions = {
       method: 'POST',
       headers: {
