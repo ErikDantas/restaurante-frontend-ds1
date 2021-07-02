@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import './CarrinhoCSS.css'
 
 
@@ -10,7 +11,10 @@ export default class Carrinho extends Component{
         valortotalcarrinho: 0,
         totalitenspedidos: 0,
         frete: "",
-        usuario: ""
+        usuario: "",
+        tipousuario: "",
+        idUsuarioLogado: "",
+        checkTipoUsuario: false
     }
 
     funcAcumularQuantidadeItens = (x) => {
@@ -53,13 +57,27 @@ export default class Carrinho extends Component{
     }
 
 
+    funcGetUsuarioLogado = () => {
+        var url = window.servidor+'/funcionario/'+this.state.idUsuarioLogado
+        console.log(url)
+        fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+            console.log(data)
+            this.setState({usuario: data})
+        })
+    }
+
+
     
 
     componentDidMount(){
         this.getCarrinho()
         this.getValorTotal()
         this.funcTotalItensCarrinho()
-        this.funcGetValorFrete()
+        this.setState({idUsuarioLogado: sessionStorage.getItem('IdUsuarioLogado'), tipousuario: sessionStorage.getItem('TipoUsuarioLogado')})
+        this.funcGetUsuarioLogado()
+        
     }
 
 
@@ -68,6 +86,39 @@ export default class Carrinho extends Component{
         fetch(url)
             .then(response => response.json())
             .then(data => this.setState({totalitenspedidos: data}))
+    }
+    
+
+
+
+    funcConfirmPedido =() => {
+        if(this.state.tipousuario === 'cliente'){
+            toast.error('Delivery Indisponivel. No momento apenas funcionarios podem fazer pedidos.')
+        }else if(this.state.tipousuario ==='funcionario'){
+            console.log("OK")
+            var url = window.servidor+'/item/confirmar/'+this.state.idUsuarioLogado
+            var requestOption = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            fetch(url, requestOption)
+            .then((response) => {
+                if(response.status === 200){
+                    toast.success("Pedido confirmado.")
+                
+                }else{
+                    toast.success("Erro durante o processamento do pedido.")
+
+                }
+            })
+
+
+        }else{
+            toast.error('Favor logar em uma conta de funcionario.')
+
+        }
     }
 
 
@@ -97,32 +148,6 @@ export default class Carrinho extends Component{
     }
 
 
-    funcGetValorFrete = () => {
-        if(localStorage.getItem('TipoUsuarioLogado')==='cliente'){
-            const idcliente = localStorage.getItem('IdUsuarioLogado')
-            const url = window.servidor+'/cliente/'+idcliente
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => this.setState({usuario: data}))
-        }else if(localStorage.getItem('TipoUsuarioLogado')==='funcionario'){
-            const matriculafuncionario = localStorage.getItem('IdUsuarioLogado')
-            const url = window.servidor+'/funcionario/'+matriculafuncionario
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => this.setState({usuario: data}))
-        }
-    }
-
-    funcValorFreteIsNull = (x) => {
-        if(x===null){
-            return <div>Bairro não cadastrado.</div>
-        }else{
-            return <div>Frete: {(x).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</div>
-        }
-    }
-
     funcTotalComFrete = (x) => {
         if(x===null){
             return <div>Favor cadastrar o bairro.</div>
@@ -130,6 +155,10 @@ export default class Carrinho extends Component{
             return <div>Total: {(this.state.valortotalcarrinho).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</div>
         }
     }
+
+ 
+
+
 
     render(){
 
@@ -139,7 +168,7 @@ export default class Carrinho extends Component{
                     <h2 className="p-3 text-center">Carrinho</h2>
                 </div>
                 <div className="row mt-5 mb-5 col-12">
-                    
+                    <ToastContainer/>
                     <div className="mt-5 col-9">
                         <table className="table table-hover table-responsive table-striped">
                             <thead>
@@ -177,8 +206,6 @@ export default class Carrinho extends Component{
                                 <li className="list-group-item">
                                     {/* TOTAL + QUANTIDADE DE PRODUTOS*/}
                                     {this.state.totalitenspedidos} produtos x  {" "+(this.state.valortotalcarrinho).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                     {/*FRETE TOTAL */}
-                                    {this.funcValorFreteIsNull(this.state.frete)}
                                 </li>
                                 <li className="list-group-item">
                                     {/*VALOR TOTAL */}
@@ -187,14 +214,14 @@ export default class Carrinho extends Component{
                             </ul>
                             <div className="btn-group">
                                 <div className="p-1">
-                                    <button className="btn btn-primary p-2">Confirmar Pedido</button>
+                                    <button onClick={() => this.funcConfirmPedido()} className="btn btn-primary p-2">Confirmar Pedido</button>
                                 </div>
                                 <div className="p-1">
                                     <button onClick={() => this.limparCarrinho()} className="btn btn-warning p-2">Limpar Carrinho</button>
                                 </div>
                             </div>
-                            
-
+                            <div>
+                            </div>
                         </div>
                         
                     </div>

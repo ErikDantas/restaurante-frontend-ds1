@@ -9,13 +9,14 @@ import Home from './Components/Layout/Home';
 import Menu from './Components/Layout/Menu';
 import Mesa from './Components/Mesa/Mesa';
 import Reserva from './Components/Reserva/Reserva';
+import Reservas from './Components/Reserva/Reservas';
+
 import GerenciarCardapio from './Components/Funcionario/GerenciarCardapio';
 import GerenciarFuncionarios from './Components/Funcionario/GerenciarFuncionarios';
 import GerenciarClientes from './Components/Cliente/GerenciarClientes';
 import Bairros from './Components/Funcionario/GerenciarBairros';
 
 export default class App extends Component{
-
   
   
   render(){
@@ -53,6 +54,9 @@ export default class App extends Component{
             </Route>
             <Route exact path="/Bairros">
               <Bairros/>
+            </Route>
+            <Route path="/TodasReservas">
+              <Reservas/>
             </Route>
             </Switch>
           <Footer/>

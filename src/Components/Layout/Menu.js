@@ -6,13 +6,14 @@ import './LayoutCSS.css'
 export default class Menu extends Component{
 
     funcLogoff = () => {
-        localStorage.setItem('NomeLogin','null')
-        localStorage.setItem('IdUsuarioLogado','null')
+        sessionStorage.setItem('NomeLogin','null')
+        sessionStorage.setItem('IdUsuarioLogado','null')
+        sessionStorage.setItem('TipoDeLogin','null')
     }
 
     componentDidMount(){
         sessionStorage.setItem('qtdecarrinho',0)
-      }
+    }
 
 
     renderUsuarioNaoLogado = () => {
@@ -48,7 +49,7 @@ export default class Menu extends Component{
 
                     <div className="btn-group dropstart p-1">
                         <button className="btn bg-ds1-primary text-white dropdown-toggle fontetexto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            {localStorage.getItem('NomeLogin')}
+                            {sessionStorage.getItem('NomeLogin')}
                         </button>
                         <Link className="navbar-brand text-white p-1" to="/Carrinho"><i className="bi bi-cart"></i><span className="badge bg-primary p-1">{sessionStorage.getItem('qtdecarrinho')}</span>
                         <span className="visually-hidden">unread messages</span> </Link>
@@ -59,6 +60,7 @@ export default class Menu extends Component{
                             <li><a className="dropdown-item" href="/gerenciarcardapio">Gerenciar Cardápio</a></li>
                             <li><a className="dropdown-item" href="/mesa">Gerenciar Mesas</a></li>
                             <li><a className="dropdown-item" href="/bairros">Gerenciar Bairros</a></li>
+                            <li><a className="dropdown-item" href="/TodasReservas">Histórico de Reservas</a></li>
                             <li><hr className="dropdown-divider"/></li>
                             <li><a className="dropdown-item" onClick={this.funcLogoff} href="/ClienteLoginCadastro">Logout</a></li>
                         </ul>
@@ -85,7 +87,7 @@ export default class Menu extends Component{
 
                     <div className="btn-group dropstart p-1">
                         <button className="btn bg-ds1-primary text-white dropdown-toggle fontetexto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            {localStorage.getItem('NomeLogin')}
+                            {sessionStorage.getItem('NomeLogin')}
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><hr className="dropdown-divider"/></li>
@@ -102,21 +104,20 @@ export default class Menu extends Component{
 
     render(){
         let divRetornar = ''
-        let logado = localStorage.getItem('NomeLogin')
-        let tipologin = localStorage.getItem('TipoDeLogin')
-        if(logado==='null'){
-            divRetornar = this.renderUsuarioNaoLogado()
-            localStorage.setItem('TipoUsuarioLogado','nenhum')
-        }else{
-            if(tipologin ==='cliente'){
-                divRetornar = this.renderUsuarioLogadoClient()
-                localStorage.setItem('TipoUsuarioLogado','cliente')
+        //let logado = sessionStorage.getItem('NomeLogin')
+        let tipologin = sessionStorage.getItem('TipoDeLogin')
+        if(tipologin ==='cliente'){
+            divRetornar = this.renderUsuarioLogadoClient()
+            sessionStorage.setItem('TipoUsuarioLogado','cliente')
 
-            }else{
-                divRetornar = this.renderUsuarioLogadoFunc()
-                localStorage.setItem('TipoUsuarioLogado','funcionario')
-            }
+        }else if(tipologin === 'funcionario'){
+            divRetornar = this.renderUsuarioLogadoFunc()
+            sessionStorage.setItem('TipoUsuarioLogado','funcionario')
+        }else{
+            divRetornar = this.renderUsuarioNaoLogado()
+            sessionStorage.setItem('TipoUsuarioLogado','nenhum')
         }
+        
 
         return divRetornar
     }
