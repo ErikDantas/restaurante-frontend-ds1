@@ -56,10 +56,6 @@ export default class GerenciarCardapio extends Component{
     this.getTipoItem()
   }
 
-    componentDidMount(){
-        this.preencherTabelaItens()
-        this.getTipoItem()
-    }
 
 
     funcZerarValoresModal = () => {

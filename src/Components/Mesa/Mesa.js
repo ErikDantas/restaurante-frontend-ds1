@@ -8,22 +8,20 @@ export default class Mesa extends Component {
         incluindo: false,
         alterando: false,
         id: "",
-        mesaReservada: true
+        mesaReservada: false
     }
 
     txtNome_change = (event)=> {
-        console.log(event.target.value)
         this.setState({qtdCadeiras: event.target.value})
     }
 
     chkmesa = (event) =>{
-        console.log(event.target.checked)
         if(event.target.checked) {
-            this.setState({mesaReservada: false})
-            
-
-        } else{
             this.setState({mesaReservada: true})
+            console.log("True")
+        } else{
+            this.setState({mesaReservada: false})
+            console.log("False")
         }
     }
     
@@ -35,7 +33,6 @@ export default class Mesa extends Component {
         .then(response => response.json())
         .then((data) => {
             this.setState({mesas: data})
-            console.log(data)
         })
 }
 
@@ -50,11 +47,9 @@ iniciarAlterar = (Mesa) => {
         this.setState({mesaReservada:true})
         }else{
             this.setState({mesaReservada:false})
-        
-        
+
         }
-        console.log(this.state.mesaReservada)
-this.setState({alterando: true, qtdCadeiras: Mesa.qtdCadeiras,id: Mesa.id, reservada: Mesa.reservada})
+    this.setState({alterando: true, qtdCadeiras: Mesa.qtdCadeiras,id: Mesa.id, reservada: Mesa.reservada})
 }
 
 iniciarNovo = () => {
@@ -64,9 +59,8 @@ iniciarNovo = () => {
 
     gravarNovo = () => {
         const dados = {
-            "qtdCadeiras": this.state.qtdCadeiras,
-            "reservada": this.state.reservada
-
+            qtdCadeiras: this.state.qtdCadeiras,
+            reservada: this.state.mesaReservada
         }
             console.log(dados)
             
@@ -81,10 +75,11 @@ iniciarNovo = () => {
         
         const url = window.servidor + '/mesa/incluir'
         fetch(url, requestOptions)
-        .then(console.log('Gravado'))
         .then(this.setState({incluindo: false}))
         .then(this.preencherLista())
-        .catch(erro=>console.log('erro'))
+        .then(() => {
+            this.setState({mesaReservada: false})
+        })
         .then(() => {
             this.componentDidMount()
         })
@@ -101,9 +96,9 @@ iniciarNovo = () => {
 }
     gravarAlterar = () => {
         const dados = {
-            "id": this.state.id,
-            "qtdCadeiras": this.state.qtdCadeiras,
-            "reservada": this.state.reservada
+            id: this.state.id,
+            qtdCadeiras: this.state.qtdCadeiras,
+            reservada: this.state.mesaReservada
 
         }
         console.log(dados)
@@ -123,6 +118,9 @@ iniciarNovo = () => {
         .then(console.log('Gravado'))
         .then(this.setState({alterando: false}))
         .then(this.preencherLista())
+        .then(() => {
+            this.setState({mesaReservada: false})
+        })
         .catch(erro=>console.log('erro'))
         .then(() => {
             this.componentDidMount()
@@ -146,7 +144,6 @@ iniciarNovo = () => {
     
         const url = window.servidor + '/mesa/' + Mesa.id
         fetch(url, requestOptions)
-        .then(console.log('Excluido'))
         .then(this.preencherLista())
         .then(() => {
             this.componentDidMount()
@@ -156,7 +153,7 @@ iniciarNovo = () => {
     }
 
     voltar = () => {
-        this.setState({incluindo: false, alterando: false})
+        this.setState({incluindo: false, alterando: false, mesaReservada: false})
     }
 
 
@@ -165,7 +162,7 @@ iniciarNovo = () => {
             <div className="row mt-5 p-3 mb-5">
             <h2 className="p-3 text-center mt-4">Gerenciar Mesas</h2>
             <div className="col-4 mt-2 container-fluid">
-                    
+                    {console.log(this.state.mesaReservada)}
                 <div className="mb-3">
                     <label className="col-form-label">Quantidade de cadeiras</label>
                     <input value={this.state.qtdCadeiras} onChange={this.txtNome_change} className="form-control name-pull-image" type="text"></input>     

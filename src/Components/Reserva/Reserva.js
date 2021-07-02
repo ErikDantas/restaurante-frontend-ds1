@@ -25,12 +25,15 @@ export default class Reserva extends Component{
         this.setState({telefone: event.target.value})
     }
 
+
+
     funcEfetuarReser = () => {
         var dados = {
             dataHoraReserva: this.state.data,
             nomeUsuario: this.state.nome,
             telefone: this.state.telefone,
-            qtdLugares: this.state.qtdlugares
+            qtdLugares: this.state.qtdlugares,
+            status: "Aguardando Confirmação"
         }
 
 
@@ -44,12 +47,14 @@ export default class Reserva extends Component{
         };
 
         
+        
         var url = window.servidor+"/reserva/incluir"
 
         fetch(url,requestOptions)
         .then((response) => {
             if(response.status===200){
                 toast.success("Reserva efetuada com sucesso.")
+                window.location.reload()
             }else{
                 toast.error("Falha durante a solicitação da reserva.")
             }

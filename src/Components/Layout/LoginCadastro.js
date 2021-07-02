@@ -94,7 +94,7 @@ export default class ClienteLoginCadastro extends Component{
                     }
                     
                 })
-        }else{
+        }else if(this.state.TipoLogin === "funcionario"){
             
 
             var purl = window.servidor + '/cliente/login'
@@ -117,8 +117,11 @@ export default class ClienteLoginCadastro extends Component{
 
                     }          
                 })
-        }      
-    }
+        }else{
+            toast.error("Dados inválidos, tente novamente.")
+        }
+    }      
+    
 
 
 

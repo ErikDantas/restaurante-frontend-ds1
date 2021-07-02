@@ -60,6 +60,7 @@ export default class Menu extends Component{
                             <li><a className="dropdown-item" href="/gerenciarcardapio">Gerenciar Cardápio</a></li>
                             <li><a className="dropdown-item" href="/mesa">Gerenciar Mesas</a></li>
                             <li><a className="dropdown-item" href="/bairros">Gerenciar Bairros</a></li>
+                            <li><a className="dropdown-item" href="/TodasReservas">Histórico de Reservas</a></li>
                             <li><hr className="dropdown-divider"/></li>
                             <li><a className="dropdown-item" onClick={this.funcLogoff} href="/ClienteLoginCadastro">Logout</a></li>
                         </ul>

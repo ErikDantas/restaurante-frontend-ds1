@@ -87,6 +87,7 @@ export default class Carrinho extends Component{
             .then(response => response.json())
             .then(data => this.setState({totalitenspedidos: data}))
     }
+    
 
 
 
