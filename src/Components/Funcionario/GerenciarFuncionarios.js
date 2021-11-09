@@ -269,6 +269,7 @@ export default class GerenciarFuncionarios extends Component{
                     this.preencherTabelaFuncionarios()
                 })
         }
+
     }
 
     atualizarEnderecoFuncionario(){
@@ -307,6 +308,8 @@ export default class GerenciarFuncionarios extends Component{
                     toast.error("Falha ao atualizar endereço.")
                 }
             })
+    
+        this.setState({logradouro: "", numero: "", cep: "", cidade: "", complemento: ""});
     }
 
 

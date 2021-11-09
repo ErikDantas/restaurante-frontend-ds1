@@ -94,7 +94,7 @@ export default class ClienteLoginCadastro extends Component{
                     }
                     
                 })
-        }else if(this.state.TipoLogin === "funcionario"){
+        }else if(this.state.TipoLogin === "cliente"){
             
 
             var purl = window.servidor + '/cliente/login'
